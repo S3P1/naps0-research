@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Naps0 — On-Device Infant Cry Classification</title>
+  <meta name="description" content="Real-time, privacy-first baby cry monitor for Android. Classifies infant crying into pain, hunger, discomfort and tired — entirely on-device.">
+  <meta name="theme-color" content="#020503">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:         #020503;
+      --bg-mid:     #080F0A;
+      --bg-green:   #0D2016;
+      --border:     rgba(255,255,255,0.06);
+      --border2:    rgba(255,255,255,0.10);
+      --text:       #e8e8e8;
+      --text2:      rgba(255,255,255,0.55);
+      --text3:      rgba(255,255,255,0.27);
+      --text4:      rgba(255,255,255,0.12);
+
+      --green:      #27AE60;
+      --red:        #E74C3C;
+      --pain:       #C0392B;
+      --hunger:     #D4A000;
+      --discomfort: #D4622A;
+      --tired:      #7B3FA0;
+      --white:      #ffffff;
+
+      --fi: 'Inter', sans-serif;
+      --fm: 'DM Mono', monospace;
+      --max: 1080px;
+      --gutter: clamp(1.25rem, 5vw, 2.5rem);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--fm);
+      font-size: 13px;
+      font-weight: 300;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* Radial bg — same as _BgPainter */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(
+          ellipse 80% 70% at 50% 52%,
+          #0D2016 0%,
+          #080F0A 40%,
+          #010301 100%
+        );
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Grain */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.35;
+    }
+
+    * { position: relative; z-index: 2; }
+
+    /* ── Layout ── */
+    .wrap {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 0 var(--gutter);
+    }
+
+    section { padding: 5rem 0; }
+
+    hr {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 0;
+    }
+
+    /* ── Nav ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      border-bottom: 1px solid var(--border);
+      background: rgba(2,5,3,0.80);
+      backdrop-filter: blur(14px);
+    }
+
+    .nav-inner {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 0 var(--gutter);
+      height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* Logo — matches _LogoPainter colors exactly */
+    .logo {
+      font-family: var(--fi);
+      font-weight: 900;
+      font-size: 20px;
+      letter-spacing: -1.5px;
+      text-decoration: none;
+      display: flex;
+    }
+    .logo .n { color: #D4A000; }
+    .logo .a { color: #D4622A; }
+    .logo .p { color: #C0392B; }
+    .logo .s { color: #7B3FA0; }
+    .logo .z { color: #FFFFFF; }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+    .nav-links a {
+      color: var(--text3);
+      text-decoration: none;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-weight: 300;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text2); }
+
+    /* ── Hero ── */
+    #hero {
+      min-height: 100svh;
+      display: flex;
+      align-items: center;
+      padding-top: 52px;
+    }
+
+    .hero-eyebrow {
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text3);
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      opacity: 0;
+      animation: up 0.6s ease forwards 0.1s;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      width: 18px;
+      height: 1px;
+      background: var(--text3);
+      flex-shrink: 0;
+    }
+
+    /* Big wordmark — exact same letter colors as logo */
+    .hero-wordmark {
+      font-family: var(--fi);
+      font-weight: 900;
+      font-size: clamp(80px, 16vw, 160px);
+      line-height: 0.88;
+      letter-spacing: -0.045em;
+      margin-bottom: 2.5rem;
+      opacity: 0;
+      animation: up 0.7s ease forwards 0.2s;
+    }
+    .hero-wordmark .n { color: #D4A000; }
+    .hero-wordmark .a { color: #D4622A; }
+    .hero-wordmark .p { color: #C0392B; }
+    .hero-wordmark .s { color: #7B3FA0; }
+    .hero-wordmark .z { color: #FFFFFF; }
+
+    .hero-body {
+      max-width: 480px;
+      font-size: 14px;
+      color: var(--text2);
+      line-height: 1.85;
+      margin-bottom: 3rem;
+      opacity: 0;
+      animation: up 0.7s ease forwards 0.35s;
+    }
+    .hero-body strong { color: var(--text); font-weight: 400; }
+
+    .hero-actions {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      opacity: 0;
+      animation: up 0.7s ease forwards 0.5s;
+    }
+
+    /* Buttons — same style as app containers */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.65rem 1.25rem;
+      font-family: var(--fm);
+      font-size: 11px;
+      font-weight: 300;
+      letter-spacing: 0.08em;
+      text-decoration: none;
+      border-radius: 4px;
+      transition: all 0.2s;
+      cursor: pointer;
+      border: none;
+    }
+    .btn-primary {
+      background: var(--green);
+      color: #fff;
+    }
+    .btn-primary:hover { background: #2ecc71; }
+
+    .btn-ghost {
+      background: rgba(255,255,255,0.05);
+      color: var(--text2);
+      border: 1px solid var(--border2);
+    }
+    .btn-ghost:hover { background: rgba(255,255,255,0.08); color: var(--text); }
+
+    /* Status dot — matches _PulsingDot */
+    .dot {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      animation: pulse 1.6s ease-in-out infinite;
+      flex-shrink: 0;
+    }
+    .dot-green { background: var(--green); }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.3; transform: scale(0.6); }
+    }
+
+    /* ── Classes strip ── */
+    .strip {
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .strip-inner {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+    }
+    .cls {
+      padding: 1.75rem var(--gutter);
+      border-right: 1px solid var(--border);
+      transition: background 0.2s;
+    }
+    .cls:last-child { border-right: none; }
+    .cls:hover { background: rgba(255,255,255,0.02); }
+
+    .cls-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      margin-bottom: 0.6rem;
+    }
+    .cls[data-c="pain"]       .cls-dot { background: #C0392B; box-shadow: 0 0 6px #C0392B; }
+    .cls[data-c="hunger"]     .cls-dot { background: #D4A000; box-shadow: 0 0 6px #D4A000; }
+    .cls[data-c="discomfort"] .cls-dot { background: #D4622A; box-shadow: 0 0 6px #D4622A; }
+    .cls[data-c="tired"]      .cls-dot { background: #7B3FA0; box-shadow: 0 0 6px #7B3FA0; }
+
+    .cls-name {
+      font-family: var(--fi);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 0.2rem;
+    }
+    .cls[data-c="pain"]       .cls-name { color: #C0392B; }
+    .cls[data-c="hunger"]     .cls-name { color: #D4A000; }
+    .cls[data-c="discomfort"] .cls-name { color: #D4622A; }
+    .cls[data-c="tired"]      .cls-name { color: #7B3FA0; }
+
+    .cls-sub { font-size: 10px; color: var(--text3); letter-spacing: 0.04em; }
+
+    /* ── Metrics ── */
+    #metrics { padding: 5rem 0; }
+
+    .sec-label {
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text3);
+      margin-bottom: 2.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .sec-label::after {
+      content: ''; flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 3.5rem;
+    }
+
+    .mc {
+      background: var(--bg);
+      padding: 1.75rem 1.5rem;
+      transition: background 0.2s;
+    }
+    .mc:hover { background: rgba(13,32,22,0.6); }
+
+    .mc-val {
+      font-family: var(--fi);
+      font-weight: 900;
+      font-size: clamp(28px, 4vw, 40px);
+      letter-spacing: -0.03em;
+      line-height: 1;
+      margin-bottom: 0.4rem;
+      color: var(--text);
+    }
+    .mc.accent .mc-val { color: var(--green); }
+
+    .mc-lbl {
+      font-size: 10px;
+      color: var(--text3);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .mc-tag {
+      display: inline-block;
+      font-size: 9px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      background: rgba(39,174,96,0.15);
+      color: var(--green);
+      border: 1px solid rgba(39,174,96,0.25);
+      padding: 0.1rem 0.4rem;
+      border-radius: 2px;
+      margin-bottom: 0.6rem;
+    }
+
+    /* Table */
+    .tbl-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+    }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    thead tr { border-bottom: 1px solid var(--border2); background: rgba(255,255,255,0.02); }
+    th {
+      padding: 0.7rem 1rem;
+      text-align: left;
+      color: var(--text3);
+      font-weight: 300;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-size: 9px;
+      white-space: nowrap;
+    }
+    td {
+      padding: 0.6rem 1rem;
+      color: var(--text2);
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:hover td { background: rgba(13,32,22,0.5); color: var(--text); }
+    td.hi { color: var(--text); }
+    td.gr { color: var(--green); font-family: var(--fi); font-weight: 600; }
+    .op-tag {
+      display: inline-block;
+      font-size: 9px;
+      padding: 0.1rem 0.3rem;
+      border-radius: 2px;
+      background: rgba(39,174,96,0.12);
+      color: rgba(39,174,96,0.7);
+      margin-left: 0.4rem;
+      vertical-align: middle;
+    }
+
+    /* ── Methodology ── */
+    #methodology { padding: 5rem 0; }
+
+    .meth-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .meth-card {
+      background: var(--bg);
+      padding: 2.5rem 2rem;
+      transition: background 0.2s;
+    }
+    .meth-card:hover { background: rgba(13,32,22,0.5); }
+
+    .meth-n {
+      font-family: var(--fi);
+      font-weight: 900;
+      font-size: 52px;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      color: var(--border2);
+      margin-bottom: 1.25rem;
+    }
+
+    .meth-title {
+      font-family: var(--fi);
+      font-weight: 700;
+      font-size: 15px;
+      color: var(--text);
+      margin-bottom: 0.75rem;
+      letter-spacing: -0.01em;
+    }
+
+    .meth-body {
+      font-size: 12px;
+      color: var(--text2);
+      line-height: 1.8;
+    }
+    .meth-body strong { color: var(--text); font-weight: 400; }
+
+    /* ── Dataset ── */
+    #dataset { padding: 5rem 0; }
+
+    .ds-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: start;
+    }
+
+    .bar-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.1rem;
+    }
+    .bar-lbl {
+      width: 85px;
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      flex-shrink: 0;
+    }
+    .bar-lbl[data-c="pain"]       { color: #C0392B; }
+    .bar-lbl[data-c="hunger"]     { color: #D4A000; }
+    .bar-lbl[data-c="discomfort"] { color: #D4622A; }
+    .bar-lbl[data-c="tired"]      { color: #7B3FA0; }
+
+    .bar-track {
+      flex: 1;
+      height: 3px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .bar-fill {
+      height: 100%;
+      border-radius: 2px;
+      width: 0;
+      transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .bar-fill[data-c="pain"]       { background: #C0392B; }
+    .bar-fill[data-c="hunger"]     { background: #D4A000; }
+    .bar-fill[data-c="discomfort"] { background: #D4622A; }
+    .bar-fill[data-c="tired"]      { background: #7B3FA0; }
+
+    .bar-n { width: 44px; text-align: right; font-size: 11px; color: var(--text3); }
+
+    .ds-total {
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+    .ds-total-lbl { font-size: 10px; color: var(--text3); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.3rem; }
+    .ds-total-val {
+      font-family: var(--fi);
+      font-weight: 900;
+      font-size: 36px;
+      letter-spacing: -0.03em;
+      color: var(--text);
+    }
+    .ds-total-sub { font-size: 11px; color: var(--text3); margin-top: 0.2rem; }
+
+    .ds-text h3 {
+      font-family: var(--fi);
+      font-weight: 900;
+      font-size: 22px;
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+      line-height: 1.2;
+    }
+    .ds-text p {
+      font-size: 12px;
+      color: var(--text2);
+      line-height: 1.85;
+      margin-bottom: 0.85rem;
+    }
+    .ds-text p strong { color: var(--text); font-weight: 400; }
+
+    .src-list { list-style: none; margin-top: 1.25rem; }
+    .src-list li {
+      font-size: 11px;
+      color: var(--text3);
+      padding: 0.35rem 0;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+    }
+    .src-list li::before {
+      content: '';
+      width: 3px; height: 3px;
+      border-radius: 50%;
+      background: var(--text3);
+      flex-shrink: 0;
+    }
+
+    /* ── Research ── */
+    #research { padding: 5rem 0; }
+
+    .res-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+
+    .res-text h2 {
+      font-family: var(--fi);
+      font-weight: 900;
+      font-size: clamp(28px, 4vw, 40px);
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 1.25rem;
+    }
+    .res-text p {
+      font-size: 12px;
+      color: var(--text2);
+      line-height: 1.85;
+      margin-bottom: 0.85rem;
+    }
+
+    .res-links { margin-top: 1.75rem; display: flex; flex-direction: column; gap: 0.6rem; }
+
+    .res-link {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.9rem 1.1rem;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      text-decoration: none;
+      background: rgba(255,255,255,0.02);
+      transition: all 0.2s;
+    }
+    .res-link:hover {
+      border-color: var(--border2);
+      background: rgba(13,32,22,0.5);
+    }
+    .res-link-ico { font-size: 16px; flex-shrink: 0; }
+    .res-link strong { display: block; font-size: 12px; color: var(--text); font-weight: 400; margin-bottom: 0.1rem; }
+    .res-link span  { font-size: 10px; color: var(--text3); }
+
+    /* Code block */
+    .code-box {
+      background: rgba(0,0,0,0.4);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .code-hdr {
+      padding: 0.5rem 1rem;
+      border-bottom: 1px solid var(--border);
+      font-size: 10px;
+      color: var(--text3);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .code-dots { display: flex; gap: 4px; }
+    .code-dots span {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--border2);
+    }
+    pre {
+      padding: 1.25rem;
+      overflow-x: auto;
+      font-family: var(--fm);
+      font-size: 11px;
+      line-height: 1.75;
+      color: var(--text2);
+      font-weight: 300;
+    }
+    .tk { color: #7B3FA0; }
+    .tv { color: #D4A000; }
+    .tn { color: #C0392B; }
+    .ts { color: #27AE60; }
+    .tp { color: var(--text3); }
+
+    /* ── Footer ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2.5rem 0;
+    }
+    .foot-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .foot-meta { font-size: 10px; color: var(--text3); text-align: right; line-height: 1.8; }
+    .foot-meta a { color: var(--text3); text-decoration: none; }
+    .foot-meta a:hover { color: var(--text2); }
+
+    /* ── Animations ── */
+    @keyframes up {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .rev {
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 0.55s ease, transform 0.55s ease;
+    }
+    .rev.in { opacity: 1; transform: none; }
+
+    /* ── Responsive ── */
+    @media (max-width: 700px) {
+      .strip-inner { grid-template-columns: repeat(2, 1fr); }
+      .cls:nth-child(2) { border-right: none; }
+      .cls:nth-child(3) { border-top: 1px solid var(--border); }
+      .cls:nth-child(4) { border-top: 1px solid var(--border); border-right: none; }
+      .ds-grid   { grid-template-columns: 1fr; }
+      .res-inner { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="logo">
+      <span class="n">N</span><span class="a">a</span><span class="p">p</span><span class="s">s</span><span class="z">0</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#metrics">Results</a></li>
+      <li><a href="#methodology">Methodology</a></li>
+      <li><a href="#dataset">Dataset</a></li>
+      <li><a href="#research">Research</a></li>
+      <li><a href="mailto:research@naps0.com">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section id="hero">
+  <div class="wrap">
+    <p class="hero-eyebrow">Infant Cry Classification · Android · On-Device ML</p>
+    <h1 class="hero-wordmark">
+      <span class="n">N</span><span class="a">a</span><span class="p">p</span><span class="s">s</span><span class="z">0</span>
+    </h1>
+    <p class="hero-body">
+      Real-time baby cry monitor for Android.<br>
+      Classifies infant crying into <strong>pain · hunger · discomfort · tired</strong>
+      entirely on-device — no cloud, no data upload.<br><br>
+      Evaluated with <strong>PSDS 0.9424</strong> — the first infant cry system
+      assessed with the DCASE streaming evaluation standard.
+    </p>
+    <div class="hero-actions">
+      <a href="https://github.com/S3P1/naps0-research" class="btn btn-primary" target="_blank">
+        <span class="dot dot-green"></span> Research repo
+      </a>
+      <a href="mailto:research@naps0.com" class="btn btn-ghost">
+        research@naps0.com
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Classes strip -->
+<div class="strip">
+  <div class="wrap">
+    <div class="strip-inner">
+      <div class="cls" data-c="pain">
+        <div class="cls-dot"></div>
+        <div class="cls-name">Pain</div>
+        <div class="cls-sub">recall 0.960 · FP 0</div>
+      </div>
+      <div class="cls" data-c="hunger">
+        <div class="cls-dot"></div>
+        <div class="cls-name">Hunger</div>
+        <div class="cls-sub">recall 0.900 · FP 0</div>
+      </div>
+      <div class="cls" data-c="discomfort">
+        <div class="cls-dot"></div>
+        <div class="cls-name">Discomfort</div>
+        <div class="cls-sub">recall 0.940 · FP 0</div>
+      </div>
+      <div class="cls" data-c="tired">
+        <div class="cls-dot"></div>
+        <div class="cls-name">Tired</div>
+        <div class="cls-sub">recall 0.940 · FP 0</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Metrics -->
+<section id="metrics">
+  <div class="wrap">
+    <p class="sec-label rev">Performance results</p>
+
+    <div class="metrics-grid rev">
+      <div class="mc accent">
+        <div class="mc-tag">Primary metric</div>
+        <div class="mc-val">0.9424</div>
+        <div class="mc-lbl">PSDS — PSD-ROC area</div>
+      </div>
+      <div class="mc">
+        <div class="mc-val">0.935</div>
+        <div class="mc-lbl">F1 @ operating point</div>
+      </div>
+      <div class="mc">
+        <div class="mc-val">0.065</div>
+        <div class="mc-lbl">False alarm rate</div>
+      </div>
+      <div class="mc">
+        <div class="mc-val">0 ms</div>
+        <div class="mc-lbl">Onset latency p50</div>
+      </div>
+      <div class="mc">
+        <div class="mc-val">0</div>
+        <div class="mc-lbl">False positives all classes</div>
+      </div>
+      <div class="mc">
+        <div class="mc-val">200</div>
+        <div class="mc-lbl">Streaming episodes eval.</div>
+      </div>
+    </div>
+
+    <p class="sec-label rev" style="margin-top:3.5rem;">PSD-ROC curve — selected thresholds</p>
+
+    <div class="tbl-wrap rev">
+      <table>
+        <thead>
+          <tr>
+            <th>Threshold</th>
+            <th>Precision</th>
+            <th>Recall</th>
+            <th>F1</th>
+            <th>FAR</th>
+            <th>FP (all)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="hi">0.10 <span class="op-tag">operating zone ↓</span></td>
+            <td class="hi">0.935</td><td class="hi">0.935</td><td class="hi">0.935</td>
+            <td>0.065</td><td class="gr">0</td>
+          </tr>
+          <tr><td>0.20</td><td>0.935</td><td>0.935</td><td>0.935</td><td>0.065</td><td class="gr">0</td></tr>
+          <tr>
+            <td>0.35 <span class="op-tag">plateau end</span></td>
+            <td>0.935</td><td>0.935</td><td>0.935</td><td>0.065</td><td class="gr">0</td>
+          </tr>
+          <tr><td>0.40</td><td>0.927</td><td>0.890</td><td>0.908</td><td>0.070</td><td class="gr">0</td></tr>
+          <tr><td>0.45</td><td>0.949</td><td>0.740</td><td>0.832</td><td>0.040</td><td class="gr">0</td></tr>
+          <tr><td>0.50</td><td>1.000</td><td>0.510</td><td>0.675</td><td>0.000</td><td class="gr">0</td></tr>
+          <tr><td>0.55</td><td>1.000</td><td>0.290</td><td>0.450</td><td>0.000</td><td class="gr">0</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- Methodology -->
+<section id="methodology">
+  <div class="wrap">
+    <p class="sec-label rev">Why this evaluation matters</p>
+    <div class="meth-grid rev">
+      <div class="meth-card">
+        <div class="meth-n">01</div>
+        <div class="meth-title">Beyond clip-level accuracy</div>
+        <div class="meth-body">
+          Standard accuracy evaluates pre-segmented clips in isolation.
+          Real monitoring requires detecting <strong>events in a continuous stream</strong> —
+          a harder problem that clip-level accuracy systematically overestimates.
+          Naps0 is evaluated over 200 synthetic streaming episodes using PSDS,
+          the DCASE sound event detection standard (Bilen et al., ICASSP 2020).
+        </div>
+      </div>
+      <div class="meth-card">
+        <div class="meth-n">02</div>
+        <div class="meth-title">Threshold independence</div>
+        <div class="meth-body">
+          Reporting a single F1 at a fixed threshold conceals how the system behaves
+          across its operating range. <strong>PSDS is the area under the PSD-ROC curve</strong>
+          — evaluated across 18 thresholds simultaneously, providing a
+          threshold-independent score that enables genuine system comparison.
+        </div>
+      </div>
+      <div class="meth-card">
+        <div class="meth-n">03</div>
+        <div class="meth-title">Label auditing</div>
+        <div class="meth-body">
+          Non-clinical crowdsourced datasets contain mislabeled clips that inflate metrics.
+          We apply an acoustic criterion combining <strong>F0 profile, spectral centroid,
+          and cross-model agreement</strong> to challenge source labels.
+          91 pain clips were excluded after analysis — criterion documented and reproducible.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Dataset -->
+<section id="dataset">
+  <div class="wrap">
+    <p class="sec-label rev">Training dataset</p>
+    <div class="ds-grid rev">
+      <div>
+        <div class="bar-row">
+          <div class="bar-lbl" data-c="pain">pain</div>
+          <div class="bar-track"><div class="bar-fill" data-c="pain" data-w="66"></div></div>
+          <div class="bar-n">809</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-lbl" data-c="hunger">hunger</div>
+          <div class="bar-track"><div class="bar-fill" data-c="hunger" data-w="100"></div></div>
+          <div class="bar-n">1,219</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-lbl" data-c="discomfort">discomfort</div>
+          <div class="bar-track"><div class="bar-fill" data-c="discomfort" data-w="76"></div></div>
+          <div class="bar-n">933</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-lbl" data-c="tired">tired</div>
+          <div class="bar-track"><div class="bar-fill" data-c="tired" data-w="33"></div></div>
+          <div class="bar-n">397</div>
+        </div>
+        <div class="ds-total">
+          <div class="ds-total-lbl">Total</div>
+          <div class="ds-total-val">3,358</div>
+          <div class="ds-total-sub">2,387 original · 971 augmented</div>
+        </div>
+      </div>
+
+      <div class="ds-text">
+        <h3>Four public sources,<br>one scientific standard</h3>
+        <p>
+          Training data is drawn from four publicly available datasets.
+          Each clip is processed through a <strong>multi-criteria label auditing pipeline</strong>
+          before inclusion — source labels from non-clinical collections are challenged,
+          not accepted at face value.
+        </p>
+        <p>
+          The <strong>validation set is fixed, original clips only</strong>,
+          never augmented, never modified.
+        </p>
+        <ul class="src-list">
+          <li>DonateACry corpus — MIT License</li>
+          <li>Dunstan Baby Language</li>
+          <li>Kaggle BabyCry Sense</li>
+          <li>Mendeley 3-class dataset — CC-BY</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Research -->
+<section id="research">
+  <div class="wrap">
+    <div class="res-inner rev">
+      <div class="res-text">
+        <p class="sec-label" style="margin-bottom:1.5rem;">Open research</p>
+        <h2>Paper in<br>preparation</h2>
+        <p>
+          Manuscript targeting DCASE Workshop 2026 / Interspeech 2027.
+          Covers PSDS evaluation applied to infant cry, scientific label auditing
+          methodology, and on-device deployment design decisions.
+        </p>
+        <p>
+          Research code, evaluation data, and preprocessing pipelines
+          are publicly available in the GitHub repository.
+        </p>
+        <div class="res-links">
+          <a href="https://github.com/S3P1/naps0-research" class="res-link" target="_blank">
+            <span class="res-link-ico">⌥</span>
+            <div>
+              <strong>naps0-research</strong>
+              <span>GitHub · Data prep · PSDS results · MIT License</span>
+            </div>
+          </a>
+          <a href="mailto:research@naps0.com" class="res-link">
+            <span class="res-link-ico">✉</span>
+            <div>
+              <strong>research@naps0.com</strong>
+              <span>Dataset access · Collaboration · Academic inquiries</span>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <div class="code-box">
+        <div class="code-hdr">
+          <div class="code-dots"><span></span><span></span><span></span></div>
+          evaluation/psds_summary.json
+        </div>
+        <pre><span class="tp">{</span>
+  <span class="tk">"psds"</span><span class="tp">:</span> <span class="tn">0.9424</span><span class="tp">,</span>
+  <span class="tk">"evaluation_protocol"</span><span class="tp">:</span> <span class="tp">{</span>
+    <span class="tk">"streams"</span><span class="tp">:</span>              <span class="tn">200</span><span class="tp">,</span>
+    <span class="tk">"thresholds"</span><span class="tp">:</span>           <span class="tn">18</span><span class="tp">,</span>
+    <span class="tk">"iou_criterion"</span><span class="tp">:</span>        <span class="tn">0.3</span><span class="tp">,</span>
+    <span class="tk">"cross_trigger_penalty"</span><span class="tp">:</span> <span class="tv">true</span>
+  <span class="tp">},</span>
+  <span class="tk">"operating_point_0_10"</span><span class="tp">:</span> <span class="tp">{</span>
+    <span class="tk">"f1"</span><span class="tp">:</span>                   <span class="tn">0.935</span><span class="tp">,</span>
+    <span class="tk">"false_alarm_rate"</span><span class="tp">:</span>     <span class="tn">0.065</span><span class="tp">,</span>
+    <span class="tk">"fp_all_classes"</span><span class="tp">:</span>       <span class="tn">0</span><span class="tp">,</span>
+    <span class="tk">"onset_latency_p50_s"</span><span class="tp">:</span>  <span class="tn">0.0</span><span class="tp">,</span>
+    <span class="tk">"per_class"</span><span class="tp">:</span> <span class="tp">{</span>
+      <span class="tk">"pain"</span><span class="tp">:</span>       <span class="tp">{</span> <span class="tk">"recall"</span><span class="tp">:</span> <span class="tn">0.960</span><span class="tp">,</span> <span class="tk">"fp"</span><span class="tp">:</span> <span class="tn">0</span> <span class="tp">},</span>
+      <span class="tk">"hunger"</span><span class="tp">:</span>     <span class="tp">{</span> <span class="tk">"recall"</span><span class="tp">:</span> <span class="tn">0.900</span><span class="tp">,</span> <span class="tk">"fp"</span><span class="tp">:</span> <span class="tn">0</span> <span class="tp">},</span>
+      <span class="tk">"discomfort"</span><span class="tp">:</span> <span class="tp">{</span> <span class="tk">"recall"</span><span class="tp">:</span> <span class="tn">0.940</span><span class="tp">,</span> <span class="tk">"fp"</span><span class="tp">:</span> <span class="tn">0</span> <span class="tp">},</span>
+      <span class="tk">"tired"</span><span class="tp">:</span>      <span class="tp">{</span> <span class="tk">"recall"</span><span class="tp">:</span> <span class="tn">0.940</span><span class="tp">,</span> <span class="tk">"fp"</span><span class="tp">:</span> <span class="tn">0</span> <span class="tp">}</span>
+    <span class="tp">}</span>
+  <span class="tp">}</span>
+<span class="tp">}</span></pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="wrap">
+    <div class="foot-inner">
+      <a href="/" class="logo" style="font-size:18px;">
+        <span class="n">N</span><span class="a">a</span><span class="p">p</span><span class="s">s</span><span class="z">0</span>
+      </a>
+      <div class="foot-meta">
+        <a href="mailto:research@naps0.com">research@naps0.com</a><br>
+        © 2026 Naps0 · Research code MIT · App proprietary
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Scroll reveal
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('in'), i * 70);
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.rev').forEach(el => obs.observe(el));
+
+  // Bar animation
+  const barObs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.querySelectorAll('.bar-fill').forEach(b => {
+          b.style.width = b.dataset.w + '%';
+        });
+        barObs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.2 });
+  document.querySelectorAll('.ds-grid').forEach(el => barObs.observe(el));
+</script>
+</body>
+</html>
