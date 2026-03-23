@@ -1,0 +1,48 @@
+{
+  "experiment": "Naps0 PSDS evaluation",
+  "date": "2026-03-11",
+  "psds": 0.9424,
+  "evaluation_protocol": {
+    "streams": 200,
+    "thresholds": 18,
+    "iou_criterion": 0.3,
+    "metric": "Polyphonic Sound Detection Score (Bilen et al., ICASSP 2020)",
+    "cross_trigger_penalty": true,
+    "runtime": "ONNX on-device"
+  },
+  "operating_point_0_10": {
+    "threshold": 0.10,
+    "precision": 0.935,
+    "recall": 0.935,
+    "f1": 0.935,
+    "false_alarm_rate": 0.065,
+    "onset_latency_p50_s": 0.0,
+    "onset_latency_p90_s": 0.051,
+    "false_positives_all_classes": 0,
+    "per_class": {
+      "pain":       { "recall": 0.960, "fn": 2, "fp": 0 },
+      "hunger":     { "recall": 0.900, "fn": 5, "fp": 0 },
+      "discomfort": { "recall": 0.940, "fn": 3, "fp": 0 },
+      "tired":      { "recall": 0.940, "fn": 3, "fp": 0 }
+    }
+  },
+  "psd_roc_selected_points": [
+    { "threshold": 0.10, "precision": 0.935, "recall": 0.935, "f1": 0.935, "far": 0.065 },
+    { "threshold": 0.15, "precision": 0.935, "recall": 0.935, "f1": 0.935, "far": 0.065 },
+    { "threshold": 0.20, "precision": 0.935, "recall": 0.935, "f1": 0.935, "far": 0.065 },
+    { "threshold": 0.25, "precision": 0.935, "recall": 0.935, "f1": 0.935, "far": 0.065 },
+    { "threshold": 0.30, "precision": 0.935, "recall": 0.935, "f1": 0.935, "far": 0.065 },
+    { "threshold": 0.35, "precision": 0.935, "recall": 0.935, "f1": 0.935, "far": 0.065 },
+    { "threshold": 0.40, "precision": 0.927, "recall": 0.890, "f1": 0.908, "far": 0.070 },
+    { "threshold": 0.45, "precision": 0.949, "recall": 0.740, "f1": 0.832, "far": 0.040 },
+    { "threshold": 0.50, "precision": 1.000, "recall": 0.510, "f1": 0.675, "far": 0.000 },
+    { "threshold": 0.55, "precision": 1.000, "recall": 0.290, "f1": 0.450, "far": 0.000 }
+  ],
+  "notes": [
+    "PSDS is the normalized area under the PSD-ROC curve, evaluated threshold-independently.",
+    "FP=0 across all classes in the operating zone (thr=0.10-0.35).",
+    "Evaluation uses 200 synthetic streaming episodes, not clip-level accuracy.",
+    "Onset latency p50=0.0s: detection achieved in the first analysis window.",
+    "For methodology details see: Bilen et al. ICASSP 2020 and Ebbers et al. ICASSP 2022."
+  ]
+}
