@@ -1,6 +1,6 @@
 # Naps0 — On-Device Infant Cry Classification
 
-> Real-time, privacy-first baby cry monitor for Android.  
+> Real-time, privacy-first baby cry monitor for Android.
 > Classifies infant crying into four categories — **pain · hunger · discomfort · tired** — entirely on-device, with no cloud, no data upload, and no subscription.
 
 ---
@@ -9,132 +9,114 @@
 
 Naps0 listens continuously to a baby's cry and classifies the underlying need in real time. The entire inference pipeline runs on the Android device — no audio is ever transmitted to any server.
 
-**Input:** continuous microphone stream (16 kHz)  
+**Input:** continuous microphone stream (16 kHz)
 **Output:** differentiated push notification per class, with onset latency under 100ms
 
 ---
 
-## Key Results
+## Architecture
+
+The system uses a hierarchical two-stage pipeline:
+
+```
+Audio stream (mic)
+    ↓
+BurstEpisodeDetector (RMS energy + YIN pitch, PITCH_FMIN=160Hz)
+    ↓  ≥2 bursts, ≥3s duration
+Model A — binary pain/no-pain classifier (4ch, ONNX)
+    ↓  pain ≥ 0.55 → immediate pain alert
+CNN — hunger / discomfort / tired classifier (7ch, ONNX)
+    ↓
+EMA temporal smoothing (α=0.35) + alert cooldown (8s)
+    ↓
+Differentiated push notification per class
+```
+
+**Stage 1 (Model A):** Binary pain/no-pain classifier. Hierarchical separation ensures pain is never confused with other classes. pain_recall = 1.000 on validation set.
+
+**Stage 2 (CNN):** MobileNetV2-based classifier for hunger, discomfort, and tired. Input: 7-channel spectrogram (Log-Mel + MFCC + Δ1 + Δ2 + F0 piano-roll + CQT + dF0/dt).
+
+**BED:** BurstEpisodeDetector filters non-cry audio before reaching the classifier, maintaining FAR = 0.005 at the operating point.
+
+---
+
+## Evaluation
+
+Evaluated using the **Polyphonic Sound Detection Score (PSDS)** — Bilen et al., ICASSP 2020. To our knowledge, this is the first infant cry classification system evaluated with PSDS.
 
 | Metric | Value |
 |--------|-------|
-| **PSDS** (primary metric) | **0.9424** |
-| F1 @ operating threshold | 0.935 |
-| False Alarm Rate | 0.065 |
-| Pain recall (streaming) | 0.960 |
-| Hunger recall | 0.900 |
-| Discomfort recall | 0.940 |
-| Tired recall | 0.940 |
-| False Positives (all classes, operating zone) | **0** |
-| Onset latency p50 / p90 | 0.0s / 0.051s |
+| **PSDS** | **0.8779** |
+| F1 @ operating point | 0.956 |
+| Precision | 0.995 |
+| Recall | 0.920 |
+| False Alarm Rate | 0.005 |
+| Onset latency p50 | 0.0s |
+| False positives (all classes) | **0** |
+
+**Per-class recall @ threshold=0.10:**
+
+| Class | Recall | FN | FP |
+|-------|--------|----|----|
+| pain | 0.960 | 2 | 0 |
+| hunger | 0.900 | 5 | 0 |
+| discomfort | 0.920 | 4 | 0 |
+| tired | 0.900 | 5 | 0 |
+
+**Evaluation protocol:** 200 synthetic streaming episodes (60s each), 18 thresholds swept, IOU criterion = 0.3, val_set_fixed_v3 (204 clips, zero train/val leakage).
+
+The plateau between thresholds 0.10–0.35 with constant FAR=0.005 demonstrates robust threshold-independent behavior across the operating range.
 
 Full results: [`evaluation/psds_summary.json`](evaluation/psds_summary.json)
 
 ---
 
-## Evaluation Methodology
-
-This is the central methodological contribution of the project.
-
-Standard accuracy metrics in infant cry classification are systematically inflated by two problems:
-
-**1. Data leakage.** Most published systems assign clips randomly to train/test sets without separating by infant identity. The model learns to recognise the individual infant's voice, not the cry category. Studies that apply leave-one-subject-out evaluation report 5–15 point accuracy drops compared to random splits (Nakano et al., 2019; Ji et al., 2021).
-
-**2. Threshold dependence.** Reporting a single F1 score at a fixed threshold conceals the system's behavior across its full operating range — a critical flaw for real-time monitoring systems where the operating point is application-dependent.
-
-Naps0 addresses both using **Polyphonic Sound Detection Score (PSDS)**, the evaluation standard from the DCASE sound event detection community (Bilen et al., ICASSP 2020):
-
-- Evaluated over **200 synthetic streaming episodes** — not pre-segmented clips
-- Across **18 decision thresholds** (0.10 → 0.55)
-- Using **intersection-based TP/FP decisions** (IOU = 0.3) — robust to annotation boundary subjectivity
-- With **cross-trigger penalty** — confusion between classes is penalised as a false positive
-- **PSDS = area under the PSD-ROC curve** — threshold-independent, single comparable number
-
-To our knowledge, this is the first infant cry classification system evaluated with PSDS.
-
----
-
 ## Dataset
 
-Training set built from four public sources with scientific label auditing:
+Training data is drawn from four public sources:
 
-| Class | Original clips | Augmented | Total |
-|-------|---------------|-----------|-------|
-| pain | 388 | 421 | 809 |
-| hunger | 911 | 308 | 1,219 |
-| discomfort | 933 | 0 | 933 |
-| tired | 155 | 242 | 397 |
-| **Total** | **2,387** | **971** | **3,358** |
+| Source | License |
+|--------|---------|
+| DonateACry corpus | MIT |
+| Dunstan Baby Language recordings | Research use |
+| Kaggle BabyCry Sense | CC BY 4.0 |
+| Mendeley 3-class segmented | CC BY 4.0 |
 
-**Sources:** DonateACry · Dunstan Baby Language · Kaggle BabyCry Sense · Mendeley 3-class
+**Label auditing methodology:** Source labels from non-clinical crowdsourced datasets are challenged, not accepted at face value. We apply an acoustic criterion combining F0 profile, spectral centroid, and cross-model agreement to identify and exclude mislabeled clips. 91 low-pitch pain clips were excluded after analysis — criterion documented and reproducible.
 
-**Validation set:** 250 clips, originals only, fixed split (`val_set_fixed_v2.csv`). No augmented data in validation.
+**Train/validation separation:** The validation set is fixed (val_set_fixed_v3, 204 clips, zero augmentation). A train/validation leakage issue was identified and corrected: 86 Dunstan clips were removed from the validation set.
 
-### Label auditing methodology
-
-Each source label was validated against acoustic criteria before inclusion in training. Non-clinical crowdsourced datasets contain a non-trivial proportion of mislabeled clips that inflate reported metrics when used without auditing.
-
-Our auditing criterion combines three signals:
-- Fundamental frequency (F0) profile relative to class distribution
-- Spectral centroid consistency with the assigned class
-- Cross-model agreement between independent classifiers
-
-Applying this criterion, **91 pain clips were excluded** after cross-model analysis identified probable source mislabeling (median F0 = 244 Hz vs. 435 Hz for clean pain clips; 91% assigned to *hunger* by an independent classifier). The exclusion criterion is documented and reproducible.
-
-This auditing methodology is a transferable contribution: a principled, acoustic-evidence-based approach to challenging non-clinical labels in publicly available datasets.
+Preprocessing pipeline for DonateACry: [`data_prep/prep_donateacry.py`](data_prep/prep_donateacry.py)
 
 ---
 
-## Repository Structure
+## Repository contents
 
 ```
 naps0-research/
 ├── README.md
+├── index.html                   — project landing page (naps0.com)
 ├── data_prep/
-│   └── prep_donateacry.py     ← DonateACry preprocessing pipeline
-├── evaluation/
-│   └── psds_summary.json      ← Full PSDS results (reproducible)
-├── paper/
-│   └── naps0_preprint.pdf     ← Preprint (when published)
-└── results/
-    └── psd_roc_curve.csv      ← PSD-ROC curve data
+│   └── prep_donateacry.py
+└── evaluation/
+    └── psds_summary.json
+```
+
+This repository contains research artifacts. Application code is proprietary.
+
+---
+
+## Citation
+
+```
+Naps0: Real-Time On-Device Infant Cry Classification with Hierarchical
+Detection and PSDS Evaluation. Independent research, 2026.
+Contact: research@naps0.com
 ```
 
 ---
 
-## Paper
+## Contact
 
-Manuscript in preparation.  
-Target venue: **DCASE Workshop 2026** / **Interspeech 2027**
-
-Topics:
-- PSDS evaluation protocol applied to infant cry classification
-- Scientific label auditing methodology for non-clinical crowdsourced datasets
-- On-device deployment constraints and design decisions
-- Real-world out-of-distribution validation
-
----
-
-## App
-
-The Naps0 Android app is under private development.  
-Website: [naps0.com](https://naps0.com)  
-Research contact: research@naps0.com
-
----
-
-## References
-
-- Bilen, Ç. et al. (2020). *A Framework for the Robust Evaluation of Sound Event Detection.* ICASSP 2020.
-- Ebbers, J. et al. (2022). *Threshold Independent Evaluation of Sound Event Detection Scores.* ICASSP 2022.
-- Ferretti, G. et al. (2020). *DonateACry corpus.* Data in Brief, 29.
-- Ji, C. et al. (2021). *Infant cry classification using Transformer-based model.* IEEE Access, 9.
-- Nakano, H. et al. (2019). *Infant cry classification using CNN-LSTM.* ICASSP 2019.
-
----
-
-## License
-
-Research code in this repository: **MIT License**  
-The Naps0 app and trained models are proprietary.  
-Dataset licenses: DonateACry (MIT) · Mendeley (CC-BY)
+Research inquiries: **research@naps0.com**
+Project website: **https://naps0.com**
