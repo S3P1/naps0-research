@@ -1,269 +1,344 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Naps0 — On-Device Infant Cry Classification</title>
-  <meta name="description" content="Real-time, privacy-first baby cry monitor. Classifies infant crying into pain, hunger, discomfort and tired — entirely on-device.">
-  <meta name="theme-color" content="#020503">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Naps0 — Baby Pain Detection</title>
+<meta name="description" content="Naps0 detects when your baby cries in pain and alerts you immediately. On-device AI, no cloud, no subscription.">
+<meta name="theme-color" content="#020503">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #020503;
+  --bg-mid: #080F0A;
+  --bg-green: #0D2016;
+  --border: rgba(255,255,255,0.06);
+  --border2: rgba(255,255,255,0.10);
+  --text: #e8e8e8;
+  --text2: rgba(255,255,255,0.55);
+  --text3: rgba(255,255,255,0.27);
+  --text4: rgba(255,255,255,0.12);
+  --green: #27AE60;
+  --pain: #C0392B;
+  --hunger: #D4A000;
+  --discomfort: #BA4A00;
+  --tired: #7B3FA0;
+  --white: #ffffff;
+  --cN: #D4A000;
+  --ca: #BA4A00;
+  --cp: #C0392B;
+  --cs: #7B3FA0;
+  --c0: #FFFFFF;
+  --fi: 'Inter', sans-serif;
+  --fm: 'DM Mono', monospace;
+  --max: 1080px;
+  --gutter: clamp(1.25rem, 5vw, 2.5rem);
+}
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--fm);
+  font-size: 13px;
+  font-weight: 300;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background: radial-gradient(ellipse 80% 70% at 50% 52%, #0D2016 0%, #080F0A 40%, #010301 100%);
+  pointer-events: none; z-index: 0;
+}
+body::after {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 1; opacity: 0.35;
+}
+* { position: relative; z-index: 2; }
+.wrap { max-width: var(--max); margin: 0 auto; padding: 0 var(--gutter); }
+section { padding: 5rem 0; }
+hr { border: none; border-top: 1px solid var(--border); margin: 0; }
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+/* ── Nav ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  border-bottom: 1px solid var(--border);
+  background: rgba(2,5,3,0.80);
+  backdrop-filter: blur(14px);
+}
+.nav-inner {
+  max-width: var(--max); margin: 0 auto; padding: 0 var(--gutter);
+  height: 52px; display: flex; align-items: center; justify-content: space-between;
+}
 
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+/* ── Logo ── */
+.logo {
+  font-family: var(--fi);
+  font-weight: 900;
+  font-size: 20px;
+  letter-spacing: 0;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: baseline;
+  line-height: 1;
+}
+.logo .lN { color: var(--cN); margin-right: -0.135em; }
+.logo .lA { color: var(--ca); margin-right: -0.216em; }
+.logo .lP { color: var(--cp); margin-right: -0.1875em; }
+.logo .lS { color: var(--cs); margin-right: -0.15625em; }
+.logo .l0 { color: var(--c0); }
 
-    :root {
-      --bg:         #020503;
-      --bg-mid:     #080F0A;
-      --bg-green:   #0D2016;
-      --border:     rgba(255,255,255,0.06);
-      --border2:    rgba(255,255,255,0.10);
-      --text:       #e8e8e8;
-      --text2:      rgba(255,255,255,0.55);
-      --text3:      rgba(255,255,255,0.27);
-      --text4:      rgba(255,255,255,0.12);
+.nav-links { display: flex; gap: 1.5rem; list-style: none; align-items: center; }
+.nav-links a {
+  color: var(--text3); text-decoration: none;
+  font-size: 11px; letter-spacing: 0.1em;
+  text-transform: uppercase; font-weight: 300; transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--text2); }
+.lang-btn {
+  background: none; border: 1px solid var(--border); color: var(--text3);
+  font-family: var(--fm); font-size: 10px; letter-spacing: 0.1em;
+  text-transform: uppercase; padding: 0.25rem 0.55rem; border-radius: 3px;
+  cursor: pointer; transition: all 0.2s;
+}
+.lang-btn:hover { border-color: var(--border2); color: var(--text2); }
 
-      --green:      #27AE60;
-      --pain:       #C0392B;
-      --hunger:     #D4A000;
-      --discomfort: #BA4A00;
-      --tired:      #7B3FA0;
-      --white:      #ffffff;
+/* ── Hero ── */
+#hero { min-height: 85svh; display: flex; align-items: center; padding-top: 52px; }
+#hero .wrap { width: 100%; text-align: center; }
+#hero .hero-eyebrow { justify-content: center; }
+#hero .hero-body { margin-left: auto; margin-right: auto; }
+#hero .hero-sep { margin-left: auto; margin-right: auto; }
+#hero .hero-actions { justify-content: center; }
 
-      /* Letter colors — definitive */
-      --cN: #D4A000;
-      --ca: #BA4A00;
-      --cp: #C0392B;
-      --cs: #7B3FA0;
-      --c0: #FFFFFF;
+.hero-eyebrow {
+  font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--text3); margin-bottom: 2rem;
+  display: flex; align-items: center; gap: 0.75rem;
+  opacity: 0; animation: up 0.6s ease forwards 0.1s;
+}
+.hero-eyebrow::before { content: ''; width: 18px; height: 1px; background: var(--text3); flex-shrink: 0; }
+.hero-eyebrow::after  { content: ''; width: 18px; height: 1px; background: var(--text3); flex-shrink: 0; }
 
-      --fi: 'Inter', sans-serif;
-      --fm: 'DM Mono', monospace;
-      --max: 1080px;
-      --gutter: clamp(1.25rem, 5vw, 2.5rem);
-    }
+.hero-wordmark {
+  font-family: var(--fi);
+  font-weight: 900;
+  font-size: clamp(80px, 16vw, 160px);
+  line-height: 0.88;
+  letter-spacing: 0;
+  margin-bottom: 2.5rem;
+  display: inline-flex;
+  align-items: baseline;
+  opacity: 0;
+  animation: up 0.7s ease forwards 0.2s;
+}
+.hero-wordmark .lN { color: var(--cN); margin-right: -0.0325em; }
+.hero-wordmark .lA { color: var(--ca); margin-right: -0.052em; }
+.hero-wordmark .lP { color: var(--cp); margin-right: -0.045em; }
+.hero-wordmark .lS { color: var(--cs); margin-right: -0.0375em; }
+.hero-wordmark .l0 { color: var(--c0); }
 
-    html { scroll-behavior: smooth; }
+.hero-body {
+  max-width: 520px; font-size: 14px; color: var(--text2);
+  line-height: 1.85; margin-bottom: 3rem;
+  opacity: 0; animation: up 0.7s ease forwards 0.35s;
+}
+.hero-body strong { color: var(--text); font-weight: 400; }
 
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: var(--fm);
-      font-size: 13px;
-      font-weight: 300;
-      line-height: 1.7;
-      -webkit-font-smoothing: antialiased;
-      overflow-x: hidden;
-    }
+.hero-sep {
+  width: 40px; height: 1px;
+  background: var(--border2);
+  margin: 2rem 0;
+  opacity: 0; animation: up 0.7s ease forwards 0.42s;
+}
+.hero-cta-label {
+  font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--text3); margin-bottom: 1rem;
+  opacity: 0; animation: up 0.7s ease forwards 0.44s;
+}
+.hero-actions {
+  display: flex; gap: 0.75rem; flex-wrap: wrap;
+  opacity: 0; animation: up 0.7s ease forwards 0.5s;
+}
+.btn {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 0.65rem 1.25rem; font-family: var(--fm);
+  font-size: 11px; font-weight: 300; letter-spacing: 0.08em;
+  text-decoration: none; border-radius: 4px; transition: all 0.2s;
+  cursor: pointer; border: none;
+}
+.btn-ghost {
+  background: rgba(255,255,255,0.05); color: var(--text2);
+  border: 1px solid var(--border2);
+}
+.btn-ghost:hover { background: rgba(255,255,255,0.08); color: var(--text); }
 
-    /* Radial bg */
-    body::before {
-      content: '';
-      position: fixed; inset: 0;
-      background: radial-gradient(ellipse 80% 70% at 50% 52%, #0D2016 0%, #080F0A 40%, #010301 100%);
-      pointer-events: none; z-index: 0;
-    }
+/* ── Classes strip ── */
+.strip { border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.strip-inner { display: grid; grid-template-columns: repeat(4, 1fr); }
+.cls {
+  padding: 1.75rem var(--gutter);
+  border-right: 1px solid var(--border);
+  transition: background 0.2s;
+}
+.cls:last-child { border-right: none; }
+.cls:hover { background: rgba(255,255,255,0.02); }
 
-    /* Grain */
-    body::after {
-      content: '';
-      position: fixed; inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-      pointer-events: none; z-index: 1; opacity: 0.35;
-    }
+.cls-dot {
+  width: 7px; height: 7px; border-radius: 50%; margin-bottom: 0.6rem;
+}
+.cls[data-c="pain"]       .cls-dot { background: var(--pain);       box-shadow: 0 0 6px var(--pain); }
+.cls[data-c="hunger"]     .cls-dot { background: var(--hunger);     box-shadow: 0 0 6px var(--hunger); }
+.cls[data-c="discomfort"] .cls-dot { background: var(--discomfort); box-shadow: 0 0 6px var(--discomfort); }
+.cls[data-c="tired"]      .cls-dot { background: var(--tired);      box-shadow: 0 0 6px var(--tired); }
 
-    * { position: relative; z-index: 2; }
+.cls-name {
+  font-family: var(--fi); font-weight: 700;
+  font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+  margin-bottom: 0.35rem;
+}
+.cls[data-c="pain"]       .cls-name { color: var(--pain); }
+.cls[data-c="hunger"]     .cls-name { color: var(--hunger); }
+.cls[data-c="discomfort"] .cls-name { color: var(--discomfort); }
+.cls[data-c="tired"]      .cls-name { color: var(--tired); }
 
-    .wrap { max-width: var(--max); margin: 0 auto; padding: 0 var(--gutter); }
-    section { padding: 5rem 0; }
-    hr { border: none; border-top: 1px solid var(--border); margin: 0; }
+/* NEW: strip subtitle */
+.cls-sub {
+  font-size: 9.5px;
+  letter-spacing: 0.07em;
+  color: var(--text3);
+  line-height: 1.5;
+}
+.cls[data-c="pain"] .cls-sub { color: rgba(192,57,43,0.55); }
 
-    /* ── Nav ── */
-    nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      border-bottom: 1px solid var(--border);
-      background: rgba(2,5,3,0.80);
-      backdrop-filter: blur(14px);
-    }
-    .nav-inner {
-      max-width: var(--max); margin: 0 auto; padding: 0 var(--gutter);
-      height: 52px; display: flex; align-items: center; justify-content: space-between;
-    }
+/* ── Guide section ── */
+#guide {
+  border-top: 1px solid var(--border);
+  padding: 4.5rem 0;
+}
+.guide-header {
+  margin-bottom: 3rem;
+}
+.guide-eyebrow {
+  font-size: 9.5px; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--text3); margin-bottom: 1rem;
+  display: flex; align-items: center; gap: 0.6rem;
+}
+.guide-eyebrow::before { content: ''; width: 14px; height: 1px; background: var(--text3); flex-shrink: 0; }
+.guide-title {
+  font-family: var(--fi); font-weight: 700;
+  font-size: clamp(18px, 3vw, 24px);
+  color: var(--text); margin-bottom: 1rem;
+  letter-spacing: -0.01em;
+}
+.guide-intro {
+  max-width: 560px;
+  font-size: 13px; color: var(--text2); line-height: 1.85;
+}
+.guide-intro strong { color: var(--text); font-weight: 400; }
 
-    /* ── Logo small (nav + footer) ── */
-    /* Colores definitivos: N=#D4A000 a=#BA4A00 p=#C0392B s=#7B3FA0 0=#FFFFFF */
-    /* PAIR_SPACING: N-a=-3.25 a-p=-5.2 p-s=-4.5 s-0=-3.75 */
-    .logo {
-      font-family: var(--fi);
-      font-weight: 900;
-      font-size: 20px;
-      letter-spacing: 0;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: baseline;
-      line-height: 1;
-    }
-    .logo .lN { color: var(--cN); margin-right: -0.135em; }
-    .logo .lA { color: var(--ca); margin-right: -0.216em; }
-    .logo .lP { color: var(--cp); margin-right: -0.1875em; }
-    .logo .lS { color: var(--cs); margin-right: -0.15625em; }
-    .logo .l0 { color: var(--c0); }
+.guide-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+  margin-top: 2.5rem;
+}
+.guide-card {
+  background: var(--bg-mid);
+  padding: 1.75rem 1.5rem 2rem;
+  transition: background 0.2s;
+}
+.guide-card:hover { background: #0a1510; }
 
-    .nav-links { display: flex; gap: 1.5rem; list-style: none; align-items: center; }
-    .nav-links a {
-      color: var(--text3); text-decoration: none;
-      font-size: 11px; letter-spacing: 0.1em;
-      text-transform: uppercase; font-weight: 300; transition: color 0.2s;
-    }
-    .nav-links a:hover { color: var(--text2); }
+.guide-card-header {
+  display: flex; align-items: center; gap: 0.6rem;
+  margin-bottom: 1rem;
+}
+.guide-dot {
+  width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0;
+}
+.guide-card[data-c="pain"]       .guide-dot { background: var(--pain);       box-shadow: 0 0 5px var(--pain); }
+.guide-card[data-c="hunger"]     .guide-dot { background: var(--hunger);     box-shadow: 0 0 5px var(--hunger); }
+.guide-card[data-c="discomfort"] .guide-dot { background: var(--discomfort); box-shadow: 0 0 5px var(--discomfort); }
+.guide-card[data-c="tired"]      .guide-dot { background: var(--tired);      box-shadow: 0 0 5px var(--tired); }
 
-    /* Lang switcher */
-    .lang-btn {
-      background: none; border: 1px solid var(--border); color: var(--text3);
-      font-family: var(--fm); font-size: 10px; letter-spacing: 0.1em;
-      text-transform: uppercase; padding: 0.25rem 0.55rem; border-radius: 3px;
-      cursor: pointer; transition: all 0.2s;
-    }
-    .lang-btn:hover { border-color: var(--border2); color: var(--text2); }
+.guide-card-name {
+  font-family: var(--fi); font-weight: 700;
+  font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+}
+.guide-card[data-c="pain"]       .guide-card-name { color: var(--pain); }
+.guide-card[data-c="hunger"]     .guide-card-name { color: var(--hunger); }
+.guide-card[data-c="discomfort"] .guide-card-name { color: var(--discomfort); }
+.guide-card[data-c="tired"]      .guide-card-name { color: var(--tired); }
 
-    /* ── Hero ── */
-    #hero { min-height: 85svh; display: flex; align-items: center; padding-top: 52px; }
-    #hero .wrap { width: 100%; text-align: center; }
-    #hero .hero-eyebrow { justify-content: center; }
-    #hero .hero-body { margin-left: auto; margin-right: auto; }
-    #hero .hero-sep { margin-left: auto; margin-right: auto; }
-    #hero .hero-actions { justify-content: center; }
+.guide-card-badge {
+  font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 0.2rem 0.5rem; border-radius: 3px; margin-bottom: 1rem;
+  display: inline-block;
+}
+.guide-card[data-c="pain"] .guide-card-badge {
+  background: rgba(192,57,43,0.12); color: rgba(192,57,43,0.7);
+  border: 1px solid rgba(192,57,43,0.2);
+}
+.guide-card:not([data-c="pain"]) .guide-card-badge {
+  background: rgba(255,255,255,0.04); color: var(--text3);
+  border: 1px solid var(--border);
+}
 
-    .hero-eyebrow {
-      font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
-      color: var(--text3); margin-bottom: 2rem;
-      display: flex; align-items: center; gap: 0.75rem;
-      opacity: 0; animation: up 0.6s ease forwards 0.1s;
-    }
-    .hero-eyebrow::before {
-      content: ''; width: 18px; height: 1px; background: var(--text3); flex-shrink: 0;
-    }
-    .hero-eyebrow::after {
-      content: ''; width: 18px; height: 1px; background: var(--text3); flex-shrink: 0;
-    }
+.guide-card-text {
+  font-size: 12px; color: var(--text2); line-height: 1.75;
+}
 
-    /* ── Wordmark grande con PAIR_SPACING definitivo ── */
-    /* font-size base para cálculo: clamp(80px,16vw,160px) */
-    /* PAIR_SPACING en px a font-size 100px: N-a=-3.25px → -0.0325em etc. */
-    .hero-wordmark {
-      font-family: var(--fi);
-      font-weight: 900;
-      font-size: clamp(80px, 16vw, 160px);
-      line-height: 0.88;
-      letter-spacing: 0;
-      margin-bottom: 2.5rem;
-      display: inline-flex;
-      align-items: baseline;
-      opacity: 0;
-      animation: up 0.7s ease forwards 0.2s;
-    }
-    .hero-wordmark .lN { color: var(--cN); margin-right: -0.0325em; }
-    .hero-wordmark .lA { color: var(--ca); margin-right: -0.052em;  }
-    .hero-wordmark .lP { color: var(--cp); margin-right: -0.045em;  }
-    .hero-wordmark .lS { color: var(--cs); margin-right: -0.0375em; }
-    .hero-wordmark .l0 { color: var(--c0); }
+.guide-disclaimer {
+  margin-top: 2rem;
+  font-size: 10.5px; color: var(--text3);
+  line-height: 1.7;
+  border-left: 2px solid var(--border2);
+  padding-left: 1rem;
+  max-width: 600px;
+}
 
-    .hero-body {
-      max-width: 480px; font-size: 14px; color: var(--text2);
-      line-height: 1.85; margin-bottom: 3rem;
-      opacity: 0; animation: up 0.7s ease forwards 0.35s;
-    }
-    .hero-body strong { color: var(--text); font-weight: 400; }
+/* ── Footer ── */
+footer { border-top: 1px solid var(--border); padding: 2.5rem 0; }
+.foot-inner {
+  display: flex; justify-content: space-between;
+  align-items: center; flex-wrap: wrap; gap: 1rem;
+}
+.foot-meta { font-size: 10px; color: var(--text3); text-align: center; line-height: 1.8; width: 100%; }
+.foot-meta a { color: var(--text3); text-decoration: none; }
+.foot-meta a:hover { color: var(--text2); }
 
-    /* Separador hero */
-    .hero-sep {
-      width: 40px; height: 1px;
-      background: var(--border2);
-      margin: 2rem 0;
-      opacity: 0; animation: up 0.7s ease forwards 0.42s;
-    }
+/* ── Animations ── */
+@keyframes up {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.rev { opacity: 0; transform: translateY(12px); transition: opacity 0.55s ease, transform 0.55s ease; }
+.rev.in { opacity: 1; transform: none; }
 
-    .hero-cta-label {
-      font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
-      color: var(--text3); margin-bottom: 1rem;
-      opacity: 0; animation: up 0.7s ease forwards 0.44s;
-    }
-
-    .hero-actions {
-      display: flex; gap: 0.75rem; flex-wrap: wrap;
-      opacity: 0; animation: up 0.7s ease forwards 0.5s;
-    }
-
-    .btn {
-      display: inline-flex; align-items: center; gap: 0.5rem;
-      padding: 0.65rem 1.25rem; font-family: var(--fm);
-      font-size: 11px; font-weight: 300; letter-spacing: 0.08em;
-      text-decoration: none; border-radius: 4px; transition: all 0.2s;
-      cursor: pointer; border: none;
-    }
-    .btn-ghost {
-      background: rgba(255,255,255,0.05); color: var(--text2);
-      border: 1px solid var(--border2);
-    }
-    .btn-ghost:hover { background: rgba(255,255,255,0.08); color: var(--text); }
-
-    /* ── Classes strip ── */
-    .strip { border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-    .strip-inner { display: grid; grid-template-columns: repeat(4, 1fr); }
-    .cls {
-      padding: 1.75rem var(--gutter);
-      border-right: 1px solid var(--border);
-      transition: background 0.2s;
-    }
-    .cls:last-child { border-right: none; }
-    .cls:hover { background: rgba(255,255,255,0.02); }
-
-    .cls-dot {
-      width: 7px; height: 7px; border-radius: 50%; margin-bottom: 0.6rem;
-    }
-    .cls[data-c="pain"]       .cls-dot { background: var(--pain);       box-shadow: 0 0 6px var(--pain); }
-    .cls[data-c="hunger"]     .cls-dot { background: var(--hunger);     box-shadow: 0 0 6px var(--hunger); }
-    .cls[data-c="discomfort"] .cls-dot { background: var(--discomfort); box-shadow: 0 0 6px var(--discomfort); }
-    .cls[data-c="tired"]      .cls-dot { background: var(--tired);      box-shadow: 0 0 6px var(--tired); }
-
-    .cls-name {
-      font-family: var(--fi); font-weight: 700;
-      font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
-    }
-    .cls[data-c="pain"]       .cls-name { color: var(--pain); }
-    .cls[data-c="hunger"]     .cls-name { color: var(--hunger); }
-    .cls[data-c="discomfort"] .cls-name { color: var(--discomfort); }
-    .cls[data-c="tired"]      .cls-name { color: var(--tired); }
-
-    /* ── Footer ── */
-    footer { border-top: 1px solid var(--border); padding: 2.5rem 0; }
-    .foot-inner {
-      display: flex; justify-content: space-between;
-      align-items: center; flex-wrap: wrap; gap: 1rem;
-    }
-    .foot-meta { font-size: 10px; color: var(--text3); text-align: center; line-height: 1.8; width: 100%; }
-    .foot-meta a { color: var(--text3); text-decoration: none; }
-    .foot-meta a:hover { color: var(--text2); }
-
-    /* ── Animations ── */
-    @keyframes up {
-      from { opacity: 0; transform: translateY(16px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    .rev { opacity: 0; transform: translateY(12px); transition: opacity 0.55s ease, transform 0.55s ease; }
-    .rev.in { opacity: 1; transform: none; }
-
-    /* ── Responsive ── */
-    @media (max-width: 700px) {
-      .strip-inner { grid-template-columns: repeat(2, 1fr); }
-      .cls:nth-child(2) { border-right: none; }
-      .cls:nth-child(3) { border-top: 1px solid var(--border); }
-      .cls:nth-child(4) { border-top: 1px solid var(--border); border-right: none; }
-      .nav-links li:not(:last-child) { display: none; }
-    }
-  </style>
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  .guide-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 700px) {
+  .strip-inner { grid-template-columns: repeat(2, 1fr); }
+  .cls:nth-child(2) { border-right: none; }
+  .cls:nth-child(3) { border-top: 1px solid var(--border); }
+  .cls:nth-child(4) { border-top: 1px solid var(--border); border-right: none; }
+  .nav-links li:not(:last-child) { display: none; }
+  .guide-grid { grid-template-columns: 1fr; }
+}
+</style>
 </head>
 <body>
 
@@ -280,15 +355,15 @@
 <!-- Hero -->
 <section id="hero">
   <div class="wrap">
-    <p class="hero-eyebrow" data-i18n="hero_eyebrow">Infant Cry Classification · On-Device ML</p>
+    <p class="hero-eyebrow" data-i18n="hero_eyebrow">Baby Pain Detection · On-Device</p>
     <h1 class="hero-wordmark" aria-label="Naps0" translate="no">
       <span class="lN">N</span><span class="lA">a</span><span class="lP">p</span><span class="lS">s</span><span class="l0">0</span>
     </h1>
     <p class="hero-body" data-i18n="hero_body">
-      Classifies infant crying into <strong>pain · hunger · discomfort · tired</strong> — entirely on-device, with no cloud, no data upload.
+      Naps0 detects when your baby cries in <strong>pain</strong> and alerts you immediately. For hunger, discomfort and tiredness, it gives you pattern-based guidance — useful, though with higher individual variability. Everything runs on your phone. <strong>No cloud, no data upload, no subscription.</strong>
     </p>
     <div class="hero-sep"></div>
-    <p class="hero-cta-label" data-i18n="hero_cta_label">For project details or evaluation metrics</p>
+    <p class="hero-cta-label" data-i18n="hero_cta_label">Currently in private beta · Research paper in preparation</p>
     <div class="hero-actions">
       <a href="mailto:contact@naps0.com" class="btn btn-ghost" data-i18n="hero_btn">contact@naps0.com</a>
     </div>
@@ -302,22 +377,92 @@
       <div class="cls" data-c="pain">
         <div class="cls-dot"></div>
         <div class="cls-name" data-i18n="cls_pain">Pain</div>
+        <div class="cls-sub" data-i18n="cls_pain_sub">Detected · Universal neurological basis</div>
       </div>
       <div class="cls" data-c="hunger">
         <div class="cls-dot"></div>
         <div class="cls-name" data-i18n="cls_hunger">Hunger</div>
+        <div class="cls-sub" data-i18n="cls_hunger_sub">Estimated · Indicative pattern</div>
       </div>
       <div class="cls" data-c="discomfort">
         <div class="cls-dot"></div>
         <div class="cls-name" data-i18n="cls_discomfort">Discomfort</div>
+        <div class="cls-sub" data-i18n="cls_discomfort_sub">Estimated · Indicative pattern</div>
       </div>
       <div class="cls" data-c="tired">
         <div class="cls-dot"></div>
         <div class="cls-name" data-i18n="cls_tired">Tired</div>
+        <div class="cls-sub" data-i18n="cls_tired_sub">Estimated · Indicative pattern</div>
       </div>
     </div>
   </div>
 </div>
+
+<!-- Guide section -->
+<section id="guide" class="rev">
+  <div class="wrap">
+    <div class="guide-header">
+      <p class="guide-eyebrow" data-i18n="guide_eyebrow">For caregivers</p>
+      <h2 class="guide-title" data-i18n="guide_title">Understanding your baby's cry</h2>
+      <p class="guide-intro" data-i18n="guide_intro">
+        Crying is your baby's only way to communicate. Science draws a clear line between pain and other cries — <strong>pain engages neurological pathways shared across all mammals</strong>, making it acoustically distinct. The other three categories are pattern-based orientations, not deterministic classifications.
+      </p>
+    </div>
+
+    <div class="guide-grid">
+
+      <div class="guide-card" data-c="pain">
+        <div class="guide-card-header">
+          <div class="guide-dot"></div>
+          <div class="guide-card-name" data-i18n="cls_pain">Pain</div>
+        </div>
+        <span class="guide-card-badge" data-i18n="badge_pain">Detected · Solid evidence</span>
+        <p class="guide-card-text" data-i18n="guide_pain_text">
+          Immediate priority alert. Pain cry activates primitive neurological pathways — producing elevated pitch, sudden bursts and non-linear vocal phenomena. This distinction holds across species and across individual babies. Naps0 treats this as its primary signal.
+        </p>
+      </div>
+
+      <div class="guide-card" data-c="hunger">
+        <div class="guide-card-header">
+          <div class="guide-dot"></div>
+          <div class="guide-card-name" data-i18n="cls_hunger">Hunger</div>
+        </div>
+        <span class="guide-card-badge" data-i18n="badge_est">Estimated · Indicative pattern</span>
+        <p class="guide-card-text" data-i18n="guide_hunger_text">
+          A rhythmic, repetitive cry with regular pauses may indicate hunger. Naps0 detects this acoustic pattern and suggests it as a possibility — always worth checking alongside your baby's feeding schedule.
+        </p>
+      </div>
+
+      <div class="guide-card" data-c="discomfort">
+        <div class="guide-card-header">
+          <div class="guide-dot"></div>
+          <div class="guide-card-name" data-i18n="cls_discomfort">Discomfort</div>
+        </div>
+        <span class="guide-card-badge" data-i18n="badge_est">Estimated · Indicative pattern</span>
+        <p class="guide-card-text" data-i18n="guide_discomfort_text">
+          An irregular cry with tonal variations may signal physical discomfort — gas, posture, clothing or temperature. The app surfaces this possibility for you to investigate alongside other physical cues from your baby.
+        </p>
+      </div>
+
+      <div class="guide-card" data-c="tired">
+        <div class="guide-card-header">
+          <div class="guide-dot"></div>
+          <div class="guide-card-name" data-i18n="cls_tired">Tired</div>
+        </div>
+        <span class="guide-card-badge" data-i18n="badge_est">Estimated · Indicative pattern</span>
+        <p class="guide-card-text" data-i18n="guide_tired_text">
+          A softer cry with a descending pitch contour, often paired with visual tiredness cues, may indicate the need for rest. Naps0 detects this tonal pattern as a possible indicator — combined with your own observation it becomes most useful.
+        </p>
+      </div>
+
+    </div>
+
+    <p class="guide-disclaimer" data-i18n="guide_disclaimer">
+      Hunger, discomfort and tired signals are orientations, not diagnoses. Individual variation between babies is high. The app is a tool to reduce uncertainty — your intuition as a caregiver remains essential.
+    </p>
+
+  </div>
+</section>
 
 <!-- Footer -->
 <footer>
@@ -332,48 +477,91 @@
 </footer>
 
 <script>
-  /* ── i18n ── */
-  const translations = {
-    en: {
-      nav_contact:    'Contact',
-      hero_eyebrow:   'Infant Cry Classification · On-Device ML',
-      hero_body:      'Classifies infant crying into <strong>pain · hunger · discomfort · tired</strong> — entirely on-device, with no cloud, no data upload.',
-      cls_pain:       'Pain',
-      cls_hunger:     'Hunger',
-      cls_discomfort: 'Molestia',
-      cls_tired:      'Sueño',
-      footer_copy:    '© 2026 Naps0 · App proprietary',
-    },
-    es: {
-      nav_contact:    'Contacto',
-      hero_eyebrow:   'Clasificación del llanto infantil · IA en el dispositivo',
-      hero_body:      'Clasifica el llanto del bebé en <strong>dolor · hambre · molestia · sueño</strong> — todo en el dispositivo, sin usar la nube ni subir datos.',
-      hero_cta_label: 'Para más información del proyecto o consultar métricas',
-      hero_btn:       'contact@naps0.com',
-      cls_pain:       'Dolor',
-      cls_hunger:     'Hambre',
-      cls_discomfort: 'Molestia',
-      cls_tired:      'Sueño',
-      footer_copy:    '© 2026 Naps0 · App de uso exclusivo',
-    }
-  };
-
-  let currentLang = 'en';
-
-  function applyLang(lang) {
-    currentLang = lang;
-    const t = translations[lang];
-    document.querySelectorAll('[data-i18n]').forEach(el => {
-      const key = el.getAttribute('data-i18n');
-      if (t[key] !== undefined) el.innerHTML = t[key];
-    });
-    document.documentElement.lang = lang;
-    document.getElementById('langBtn').textContent = lang === 'en' ? 'ES' : 'EN';
-    // Actualizar title y description
-    document.title = lang === 'es'
-      ? 'Naps0 — Monitor de Llanto Infantil'
-      : 'Naps0 — On-Device Infant Cry Classification';
+/* ── i18n ── */
+const translations = {
+  en: {
+    nav_contact:      'Contact',
+    hero_eyebrow:     'Baby Pain Detection · On-Device',
+    hero_body:        'Naps0 detects when your baby cries in <strong>pain</strong> and alerts you immediately. For hunger, discomfort and tiredness, it gives you pattern-based guidance — useful, though with higher individual variability. Everything runs on your phone. <strong>No cloud, no data upload, no subscription.</strong>',
+    hero_cta_label:   'Currently in private beta · Research paper in preparation',
+    hero_btn:         'contact@naps0.com',
+    cls_pain:         'Pain',
+    cls_hunger:       'Hunger',
+    cls_discomfort:   'Discomfort',
+    cls_tired:        'Tired',
+    cls_pain_sub:     'Detected · Universal neurological basis',
+    cls_hunger_sub:   'Estimated · Indicative pattern',
+    cls_discomfort_sub: 'Estimated · Indicative pattern',
+    cls_tired_sub:    'Estimated · Indicative pattern',
+    guide_eyebrow:    'For caregivers',
+    guide_title:      'Understanding your baby\'s cry',
+    guide_intro:      'Crying is your baby\'s only way to communicate. Science draws a clear line between pain and other cries — <strong>pain engages neurological pathways shared across all mammals</strong>, making it acoustically distinct. The other three categories are pattern-based orientations, not deterministic classifications.',
+    badge_pain:       'Detected · Solid evidence',
+    badge_est:        'Estimated · Indicative pattern',
+    guide_pain_text:  'Immediate priority alert. Pain cry activates primitive neurological pathways — producing elevated pitch, sudden bursts and non-linear vocal phenomena. This distinction holds across species and across individual babies. Naps0 treats this as its primary signal.',
+    guide_hunger_text: 'A rhythmic, repetitive cry with regular pauses may indicate hunger. Naps0 detects this acoustic pattern and suggests it as a possibility — always worth checking alongside your baby\'s feeding schedule.',
+    guide_discomfort_text: 'An irregular cry with tonal variations may signal physical discomfort — gas, posture, clothing or temperature. The app surfaces this possibility for you to investigate alongside other physical cues from your baby.',
+    guide_tired_text: 'A softer cry with a descending pitch contour, often paired with visual tiredness cues, may indicate the need for rest. Naps0 detects this tonal pattern as a possible indicator — combined with your own observation it becomes most useful.',
+    guide_disclaimer: 'Hunger, discomfort and tired signals are orientations, not diagnoses. Individual variation between babies is high. The app is a tool to reduce uncertainty — your intuition as a caregiver remains essential.',
+    footer_copy:      '© 2026 Naps0 · App proprietary',
+  },
+  es: {
+    nav_contact:      'Contacto',
+    hero_eyebrow:     'Detección de dolor en bebés · IA en el dispositivo',
+    hero_body:        'Naps0 detecta cuando tu bebé llora de <strong>dolor</strong> y te alerta de inmediato. Para el hambre, la molestia y el sueño, te da una orientación basada en el patrón del llanto — útil, aunque con mayor variabilidad individual. Todo ocurre en tu móvil. <strong>Sin nube, sin subir datos, sin suscripción.</strong>',
+    hero_cta_label:   'Actualmente en beta privada · Paper científico en preparación',
+    hero_btn:         'contact@naps0.com',
+    cls_pain:         'Dolor',
+    cls_hunger:       'Hambre',
+    cls_discomfort:   'Molestia',
+    cls_tired:        'Sueño',
+    cls_pain_sub:     'Detectado · Base neurológica universal',
+    cls_hunger_sub:   'Estimado · Patrón orientativo',
+    cls_discomfort_sub: 'Estimado · Patrón orientativo',
+    cls_tired_sub:    'Estimado · Patrón orientativo',
+    guide_eyebrow:    'Para cuidadores',
+    guide_title:      'Entender el llanto de tu bebé',
+    guide_intro:      'El llanto es la única forma que tiene tu bebé de comunicarse. La ciencia traza una línea clara entre el dolor y el resto — <strong>el llanto de dolor activa vías neurológicas compartidas por todos los mamíferos</strong>, lo que lo hace acústicamente distinto. Las otras tres categorías son orientaciones basadas en patrones, no clasificaciones deterministas.',
+    badge_pain:       'Detectado · Evidencia sólida',
+    badge_est:        'Estimado · Patrón orientativo',
+    guide_pain_text:  'Alerta de máxima prioridad. El llanto de dolor activa vías neurológicas primitivas — produciendo tono elevado, arranques bruscos y fenómenos vocales no lineales. Esta distinción se mantiene entre especies y entre bebés individuales. Naps0 lo trata como su señal principal.',
+    guide_hunger_text: 'Un llanto rítmico y repetitivo con pausas regulares puede indicar hambre. Naps0 detecta este patrón acústico y lo sugiere como posibilidad — siempre vale la pena verificarlo junto con el horario de alimentación de tu bebé.',
+    guide_discomfort_text: 'Un llanto irregular con variaciones de tono puede indicar malestar físico — gases, postura, ropa o temperatura. La app muestra esta posibilidad para que la explores junto con otras señales físicas de tu bebé.',
+    guide_tired_text: 'Un llanto más suave con contorno de tono descendente, frecuentemente acompañado de señales visuales de cansancio, puede indicar necesidad de descanso. Naps0 detecta este patrón tonal como posible indicador — combinado con tu propia observación resulta más útil.',
+    guide_disclaimer: 'Las señales de hambre, molestia y sueño son orientaciones, no diagnósticos. La variabilidad individual entre bebés es alta. La app es una herramienta para reducir la incertidumbre — tu intuición como cuidador sigue siendo esencial.',
+    footer_copy:      '© 2026 Naps0 · App de uso exclusivo',
   }
+};
 
-  function toggleLang() {
-    applyLang(currentLang === 
+let currentLang = 'en';
+
+function applyLang(lang) {
+  currentLang = lang;
+  const t = translations[lang];
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (t[key] !== undefined) el.innerHTML = t[key];
+  });
+  document.documentElement.lang = lang;
+  document.getElementById('langBtn').textContent = lang === 'en' ? 'ES' : 'EN';
+  document.title = lang === 'es'
+    ? 'Naps0 — Monitor de dolor en bebés'
+    : 'Naps0 — Baby Pain Detection';
+  const desc = document.querySelector('meta[name="description"]');
+  if (desc) desc.content = lang === 'es'
+    ? 'Naps0 detecta cuando tu bebé llora de dolor y te alerta de inmediato. IA en el dispositivo, sin nube, sin suscripción.'
+    : 'Naps0 detects when your baby cries in pain and alerts you immediately. On-device AI, no cloud, no subscription.';
+}
+
+function toggleLang() {
+  applyLang(currentLang === 'en' ? 'es' : 'en');
+}
+
+/* ── Scroll reveal ── */
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); } });
+}, { threshold: 0.08 });
+document.querySelectorAll('.rev').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
