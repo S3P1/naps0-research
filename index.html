@@ -1,350 +1,328 @@
 <!DOCTYPE html>
+<!--
+  Naps0 landing -- entregable para DESPLEGAR en el repo publico S3P1/naps0-research (index.html).
+  NO es la copia read-only de Z:\Labur0\naps0_v2\naps0-research\.
+  Sustituye la landing "research" anterior por el copy consumer/freemium gateado (ES/EN).
+  CTA = lista de espera (mailto), porque la app aun no esta en Google Play.
+  Estado: gateado PASS por marketing-reviewer (04/06/2026), ES + EN. CTA waitlist correcto
+  mientras la app no este publicada; al lanzar, cambiar mailto por la URL de Play y el copy
+  "coming to Android / proximamente" por la descarga real.
+-->
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Naps0 — Baby Pain Detection</title>
-<meta name="description" content="Naps0 detects when your baby cries in pain and alerts you immediately. On-device AI, no cloud, no subscription.">
-<meta name="theme-color" content="#020503">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
-<style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-:root {
-  --bg: #020503;
-  --bg-mid: #080F0A;
-  --bg-green: #0D2016;
-  --border: rgba(255,255,255,0.06);
-  --border2: rgba(255,255,255,0.10);
-  --text: #e8e8e8;
-  --text2: rgba(255,255,255,0.55);
-  --text3: rgba(255,255,255,0.27);
-  --text4: rgba(255,255,255,0.12);
-  --green: #27AE60;
-  --pain: #C0392B;
-  --hunger: #D4A000;
-  --discomfort: #BA4A00;
-  --tired: #7B3FA0;
-  --white: #ffffff;
-  --cN: #D4A000;
-  --ca: #BA4A00;
-  --cp: #C0392B;
-  --cs: #7B3FA0;
-  --c0: #FFFFFF;
-  --fi: 'Inter', sans-serif;
-  --fm: 'DM Mono', monospace;
-  --max: 1080px;
-  --gutter: clamp(1.25rem, 5vw, 2.5rem);
-}
-html { scroll-behavior: smooth; }
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: var(--fm);
-  font-size: 13px;
-  font-weight: 300;
-  line-height: 1.7;
-  -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
-}
-body::before {
-  content: '';
-  position: fixed; inset: 0;
-  background: radial-gradient(ellipse 80% 70% at 50% 52%, #0D2016 0%, #080F0A 40%, #010301 100%);
-  pointer-events: none; z-index: 0;
-}
-body::after {
-  content: '';
-  position: fixed; inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-  pointer-events: none; z-index: 1; opacity: 0.35;
-}
-* { position: relative; z-index: 2; }
-.wrap { max-width: var(--max); margin: 0 auto; padding: 0 var(--gutter); }
-section { padding: 5rem 0; }
-hr { border: none; border-top: 1px solid var(--border); margin: 0; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Naps0 — Understand your baby's cry</title>
+  <meta name="description" content="Naps0 helps you understand what your baby might need — hunger, sleep, discomfort or pain — in real time, 100% on your phone. No cloud, no accounts, no subscription.">
+  <meta name="theme-color" content="#020503">
 
-/* ── Nav ── */
-nav {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-  border-bottom: 1px solid var(--border);
-  background: rgba(2,5,3,0.80);
-  backdrop-filter: blur(14px);
-}
-.nav-inner {
-  max-width: var(--max); margin: 0 auto; padding: 0 var(--gutter);
-  height: 52px; display: flex; align-items: center; justify-content: space-between;
-}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
 
-/* ── Logo ── */
-.logo {
-  font-family: var(--fi);
-  font-weight: 900;
-  font-size: 20px;
-  letter-spacing: 0;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: baseline;
-  line-height: 1;
-}
-.logo .lN { color: var(--cN); margin-right: -0.135em; }
-.logo .lA { color: var(--ca); margin-right: -0.216em; }
-.logo .lP { color: var(--cp); margin-right: -0.1875em; }
-.logo .lS { color: var(--cs); margin-right: -0.15625em; }
-.logo .l0 { color: var(--c0); }
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-.nav-links { display: flex; gap: 1.5rem; list-style: none; align-items: center; }
-.nav-links a {
-  color: var(--text3); text-decoration: none;
-  font-size: 11px; letter-spacing: 0.1em;
-  text-transform: uppercase; font-weight: 300; transition: color 0.2s;
-}
-.nav-links a:hover { color: var(--text2); }
-.lang-btn {
-  background: none; border: 1px solid var(--border); color: var(--text3);
-  font-family: var(--fm); font-size: 10px; letter-spacing: 0.1em;
-  text-transform: uppercase; padding: 0.25rem 0.55rem; border-radius: 3px;
-  cursor: pointer; transition: all 0.2s;
-}
-.lang-btn:hover { border-color: var(--border2); color: var(--text2); }
+    :root {
+      --bg:         #020503;
+      --bg-mid:     #080F0A;
+      --bg-green:   #0D2016;
+      --border:     rgba(255,255,255,0.06);
+      --border2:    rgba(255,255,255,0.10);
+      --text:       #e8e8e8;
+      --text2:      rgba(255,255,255,0.55);
+      --text3:      rgba(255,255,255,0.27);
+      --text4:      rgba(255,255,255,0.12);
 
-/* ── Hero ── */
-#hero { min-height: 85svh; display: flex; align-items: center; padding-top: 52px; }
-#hero .wrap { width: 100%; text-align: center; }
-#hero .hero-eyebrow { justify-content: center; }
-#hero .hero-body { margin-left: auto; margin-right: auto; }
-#hero .hero-sep { margin-left: auto; margin-right: auto; }
-#hero .hero-actions { justify-content: center; }
+      --green:      #27AE60;
+      --red:        #E74C3C;
+      --pain:       #C0392B;
+      --hunger:     #D4A000;
+      --discomfort: #D4622A;
+      --tired:      #7B3FA0;
+      --white:      #ffffff;
 
-.hero-eyebrow {
-  font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
-  color: var(--text3); margin-bottom: 2rem;
-  display: flex; align-items: center; gap: 0.75rem;
-  opacity: 0; animation: up 0.6s ease forwards 0.1s;
-}
-.hero-eyebrow::before { content: ''; width: 18px; height: 1px; background: var(--text3); flex-shrink: 0; }
-.hero-eyebrow::after  { content: ''; width: 18px; height: 1px; background: var(--text3); flex-shrink: 0; }
+      /* Wordmark letter colors (icon spec: N gold, a orange, p red, s purple, 0 white) */
+      --cN: #D4A000;
+      --ca: #D4622A;
+      --cp: #C0392B;
+      --cs: #7B3FA0;
+      --c0: #ffffff;
 
-.hero-wordmark {
-  font-family: var(--fi);
-  font-weight: 900;
-  font-size: clamp(80px, 16vw, 160px);
-  line-height: 0.88;
-  letter-spacing: 0;
-  margin-bottom: 2.5rem;
-  display: inline-flex;
-  align-items: baseline;
-  opacity: 0;
-  animation: up 0.7s ease forwards 0.2s;
-}
-.hero-wordmark .lN { color: var(--cN); margin-right: -0.0325em; }
-.hero-wordmark .lA { color: var(--ca); margin-right: -0.052em; }
-.hero-wordmark .lP { color: var(--cp); margin-right: -0.045em; }
-.hero-wordmark .lS { color: var(--cs); margin-right: -0.0375em; }
-.hero-wordmark .l0 { color: var(--c0); }
+      --fi: 'Inter', sans-serif;
+      --fm: 'DM Mono', monospace;
+      --max: 1080px;
+      --gutter: clamp(1.25rem, 5vw, 2.5rem);
+    }
 
-.hero-body {
-  max-width: 520px; font-size: 14px; color: var(--text2);
-  line-height: 1.85; margin-bottom: 3rem;
-  opacity: 0; animation: up 0.7s ease forwards 0.35s;
-}
-.hero-body strong { color: var(--text); font-weight: 400; }
+    html { scroll-behavior: smooth; }
 
-.hero-sep {
-  width: 40px; height: 1px;
-  background: var(--border2);
-  margin: 2rem 0;
-  opacity: 0; animation: up 0.7s ease forwards 0.42s;
-}
-.hero-cta-label {
-  font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
-  color: var(--text3); margin-bottom: 1rem;
-  opacity: 0; animation: up 0.7s ease forwards 0.44s;
-}
-.hero-actions {
-  display: flex; gap: 0.75rem; flex-wrap: wrap;
-  opacity: 0; animation: up 0.7s ease forwards 0.5s;
-}
-.btn {
-  display: inline-flex; align-items: center; gap: 0.5rem;
-  padding: 0.65rem 1.25rem; font-family: var(--fm);
-  font-size: 11px; font-weight: 300; letter-spacing: 0.08em;
-  text-decoration: none; border-radius: 4px; transition: all 0.2s;
-  cursor: pointer; border: none;
-}
-.btn-ghost {
-  background: rgba(255,255,255,0.05); color: var(--text2);
-  border: 1px solid var(--border2);
-}
-.btn-ghost:hover { background: rgba(255,255,255,0.08); color: var(--text); }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--fm);
+      font-size: 13px;
+      font-weight: 300;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
 
-/* ── Classes strip ── */
-.strip { border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-.strip-inner { display: grid; grid-template-columns: repeat(4, 1fr); }
-.cls {
-  padding: 1.75rem var(--gutter);
-  border-right: 1px solid var(--border);
-  transition: background 0.2s;
-}
-.cls:last-child { border-right: none; }
-.cls:hover { background: rgba(255,255,255,0.02); }
+    /* Radial bg */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse 90% 70% at 50% 0%, var(--bg-green) 0%, var(--bg-mid) 38%, var(--bg) 72%);
+      z-index: 0;
+    }
+    /* Noise overlay */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 1; opacity: 0.35;
+    }
+    * { position: relative; z-index: 2; }
+    .wrap { max-width: var(--max); margin: 0 auto; padding: 0 var(--gutter); }
+    section { padding: 5rem 0; }
+    hr { border: none; border-top: 1px solid var(--border); margin: 0; }
 
-.cls-dot {
-  width: 7px; height: 7px; border-radius: 50%; margin-bottom: 0.6rem;
-}
-.cls[data-c="pain"]       .cls-dot { background: var(--pain);       box-shadow: 0 0 6px var(--pain); }
-.cls[data-c="hunger"]     .cls-dot { background: var(--hunger);     box-shadow: 0 0 6px var(--hunger); }
-.cls[data-c="discomfort"] .cls-dot { background: var(--discomfort); box-shadow: 0 0 6px var(--discomfort); }
-.cls[data-c="tired"]      .cls-dot { background: var(--tired);      box-shadow: 0 0 6px var(--tired); }
+    /* ── Nav ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      border-bottom: 1px solid var(--border);
+      background: rgba(2,5,3,0.80);
+      backdrop-filter: blur(14px);
+    }
+    .nav-inner {
+      max-width: var(--max); margin: 0 auto; padding: 0 var(--gutter);
+      height: 52px; display: flex; align-items: center; justify-content: space-between;
+    }
+    .logo {
+      font-family: var(--fi); font-weight: 900; font-size: 20px;
+      letter-spacing: 0; text-decoration: none;
+      display: inline-flex; align-items: baseline; line-height: 1;
+    }
+    .logo .lN { color: var(--cN); margin-right: -0.135em; }
+    .logo .lA { color: var(--ca); margin-right: -0.216em; }
+    .logo .lP { color: var(--cp); margin-right: -0.1875em; }
+    .logo .lS { color: var(--cs); margin-right: -0.15625em; }
+    .logo .l0 { color: var(--c0); }
 
-.cls-name {
-  font-family: var(--fi); font-weight: 700;
-  font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
-  margin-bottom: 0.35rem;
-}
-.cls[data-c="pain"]       .cls-name { color: var(--pain); }
-.cls[data-c="hunger"]     .cls-name { color: var(--hunger); }
-.cls[data-c="discomfort"] .cls-name { color: var(--discomfort); }
-.cls[data-c="tired"]      .cls-name { color: var(--tired); }
+    .nav-links { display: flex; gap: 1.5rem; list-style: none; align-items: center; }
+    .nav-links a {
+      color: var(--text3); text-decoration: none;
+      font-size: 11px; letter-spacing: 0.1em;
+      text-transform: uppercase; font-weight: 300; transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text2); }
+    .lang-btn {
+      background: none; border: 1px solid var(--border); color: var(--text3);
+      font-family: var(--fm); font-size: 10px; letter-spacing: 0.1em;
+      text-transform: uppercase; padding: 0.25rem 0.55rem; border-radius: 3px;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .lang-btn:hover { border-color: var(--border2); color: var(--text2); }
 
-/* NEW: strip subtitle */
-.cls-sub {
-  font-size: 9.5px;
-  letter-spacing: 0.07em;
-  color: var(--text3);
-  line-height: 1.5;
-}
-.cls[data-c="pain"] .cls-sub { color: rgba(192,57,43,0.55); }
+    /* ── Hero ── */
+    #hero { min-height: 88svh; display: flex; align-items: center; padding-top: 52px; }
+    #hero .wrap { width: 100%; text-align: center; }
+    .hero-eyebrow {
+      font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--text3); margin-bottom: 2rem;
+      display: flex; justify-content: center; align-items: center; gap: 0.75rem;
+      opacity: 0; animation: up 0.6s ease forwards 0.1s;
+    }
+    .hero-eyebrow::before, .hero-eyebrow::after { content: ''; width: 18px; height: 1px; background: var(--text3); flex-shrink: 0; }
 
-/* ── Guide section ── */
-#guide {
-  border-top: 1px solid var(--border);
-  padding: 4.5rem 0;
-}
-.guide-header {
-  margin-bottom: 3rem;
-}
-.guide-eyebrow {
-  font-size: 9.5px; letter-spacing: 0.18em; text-transform: uppercase;
-  color: var(--text3); margin-bottom: 1rem;
-  display: flex; align-items: center; gap: 0.6rem;
-}
-.guide-eyebrow::before { content: ''; width: 14px; height: 1px; background: var(--text3); flex-shrink: 0; }
-.guide-title {
-  font-family: var(--fi); font-weight: 700;
-  font-size: clamp(18px, 3vw, 24px);
-  color: var(--text); margin-bottom: 1rem;
-  letter-spacing: -0.01em;
-}
-.guide-intro {
-  max-width: 560px;
-  font-size: 13px; color: var(--text2); line-height: 1.85;
-}
-.guide-intro strong { color: var(--text); font-weight: 400; }
+    .hero-wordmark {
+      font-family: var(--fi); font-weight: 900;
+      font-size: clamp(64px, 13vw, 128px); line-height: 0.88;
+      letter-spacing: 0; margin-bottom: 1.75rem;
+      display: inline-flex; align-items: baseline;
+      opacity: 0; animation: up 0.7s ease forwards 0.2s;
+    }
+    .hero-wordmark .lN { color: var(--cN); margin-right: -0.0325em; }
+    .hero-wordmark .lA { color: var(--ca); margin-right: -0.052em; }
+    .hero-wordmark .lP { color: var(--cp); margin-right: -0.045em; }
+    .hero-wordmark .lS { color: var(--cs); margin-right: -0.0375em; }
+    .hero-wordmark .l0 { color: var(--c0); }
 
-.guide-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1px;
-  background: var(--border);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  overflow: hidden;
-  margin-top: 2.5rem;
-}
-.guide-card {
-  background: var(--bg-mid);
-  padding: 1.75rem 1.5rem 2rem;
-  transition: background 0.2s;
-}
-.guide-card:hover { background: #0a1510; }
+    .hero-headline {
+      font-family: var(--fi); font-weight: 700;
+      font-size: clamp(22px, 4vw, 34px); line-height: 1.2;
+      letter-spacing: -0.01em; color: var(--text);
+      max-width: 640px; margin: 0 auto 1.5rem;
+      opacity: 0; animation: up 0.7s ease forwards 0.3s;
+    }
+    .hero-body {
+      max-width: 540px; font-size: 14px; color: var(--text2);
+      line-height: 1.85; margin: 0 auto 2.25rem;
+      opacity: 0; animation: up 0.7s ease forwards 0.4s;
+    }
+    .hero-body strong { color: var(--text); font-weight: 400; }
 
-.guide-card-header {
-  display: flex; align-items: center; gap: 0.6rem;
-  margin-bottom: 1rem;
-}
-.guide-dot {
-  width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0;
-}
-.guide-card[data-c="pain"]       .guide-dot { background: var(--pain);       box-shadow: 0 0 5px var(--pain); }
-.guide-card[data-c="hunger"]     .guide-dot { background: var(--hunger);     box-shadow: 0 0 5px var(--hunger); }
-.guide-card[data-c="discomfort"] .guide-dot { background: var(--discomfort); box-shadow: 0 0 5px var(--discomfort); }
-.guide-card[data-c="tired"]      .guide-dot { background: var(--tired);      box-shadow: 0 0 5px var(--tired); }
+    .hero-cta-label {
+      font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--text3); margin-bottom: 1rem;
+      opacity: 0; animation: up 0.7s ease forwards 0.46s;
+    }
+    .hero-actions {
+      display: flex; gap: 0.75rem; flex-wrap: wrap; justify-content: center;
+      opacity: 0; animation: up 0.7s ease forwards 0.52s;
+    }
+    .btn {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.7rem 1.4rem; font-family: var(--fm);
+      font-size: 11px; font-weight: 400; letter-spacing: 0.08em;
+      text-decoration: none; border-radius: 4px; transition: all 0.2s;
+      cursor: pointer; border: none;
+    }
+    .btn-primary {
+      background: rgba(39,174,96,0.14); color: #5fd38c;
+      border: 1px solid rgba(39,174,96,0.35);
+    }
+    .btn-primary:hover { background: rgba(39,174,96,0.22); color: #7fe0a3; }
+    .btn-ghost {
+      background: rgba(255,255,255,0.05); color: var(--text2);
+      border: 1px solid var(--border2);
+    }
+    .btn-ghost:hover { background: rgba(255,255,255,0.08); color: var(--text); }
 
-.guide-card-name {
-  font-family: var(--fi); font-weight: 700;
-  font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
-}
-.guide-card[data-c="pain"]       .guide-card-name { color: var(--pain); }
-.guide-card[data-c="hunger"]     .guide-card-name { color: var(--hunger); }
-.guide-card[data-c="discomfort"] .guide-card-name { color: var(--discomfort); }
-.guide-card[data-c="tired"]      .guide-card-name { color: var(--tired); }
+    .hero-trust {
+      margin-top: 2.5rem; font-size: 10px; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--text3);
+      opacity: 0; animation: up 0.7s ease forwards 0.6s;
+    }
 
-.guide-card-badge {
-  font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase;
-  padding: 0.2rem 0.5rem; border-radius: 3px; margin-bottom: 1rem;
-  display: inline-block;
-}
-.guide-card[data-c="pain"] .guide-card-badge {
-  background: rgba(192,57,43,0.12); color: rgba(192,57,43,0.7);
-  border: 1px solid rgba(192,57,43,0.2);
-}
-.guide-card:not([data-c="pain"]) .guide-card-badge {
-  background: rgba(255,255,255,0.04); color: var(--text3);
-  border: 1px solid var(--border);
-}
+    /* ── Classes strip ── */
+    .strip { border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .strip-inner { display: grid; grid-template-columns: repeat(4, 1fr); }
+    .cls { padding: 1.75rem var(--gutter); border-right: 1px solid var(--border); transition: background 0.2s; }
+    .cls:last-child { border-right: none; }
+    .cls:hover { background: rgba(255,255,255,0.02); }
+    .cls-dot { width: 7px; height: 7px; border-radius: 50%; margin-bottom: 0.6rem; }
+    .cls[data-c="pain"]       .cls-dot { background: var(--pain);       box-shadow: 0 0 6px var(--pain); }
+    .cls[data-c="hunger"]     .cls-dot { background: var(--hunger);     box-shadow: 0 0 6px var(--hunger); }
+    .cls[data-c="discomfort"] .cls-dot { background: var(--discomfort); box-shadow: 0 0 6px var(--discomfort); }
+    .cls[data-c="tired"]      .cls-dot { background: var(--tired);      box-shadow: 0 0 6px var(--tired); }
+    .cls-name {
+      font-family: var(--fi); font-weight: 700;
+      font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.35rem;
+    }
+    .cls[data-c="pain"]       .cls-name { color: var(--pain); }
+    .cls[data-c="hunger"]     .cls-name { color: var(--hunger); }
+    .cls[data-c="discomfort"] .cls-name { color: var(--discomfort); }
+    .cls[data-c="tired"]      .cls-name { color: var(--tired); }
+    .cls-sub { font-size: 9.5px; letter-spacing: 0.07em; color: var(--text3); line-height: 1.5; }
+    .cls[data-c="pain"] .cls-sub { color: rgba(192,57,43,0.6); }
 
-.guide-card-text {
-  font-size: 12px; color: var(--text2); line-height: 1.75;
-}
+    /* ── Generic section header ── */
+    .sec-header { margin-bottom: 2.75rem; }
+    .sec-eyebrow {
+      font-size: 9.5px; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--text3); margin-bottom: 1rem;
+      display: flex; align-items: center; gap: 0.6rem;
+    }
+    .sec-eyebrow::before { content: ''; width: 14px; height: 1px; background: var(--text3); flex-shrink: 0; }
+    .sec-title {
+      font-family: var(--fi); font-weight: 700;
+      font-size: clamp(19px, 3vw, 26px); color: var(--text);
+      margin-bottom: 1rem; letter-spacing: -0.01em; max-width: 720px; line-height: 1.25;
+    }
+    .sec-intro { max-width: 580px; font-size: 13px; color: var(--text2); line-height: 1.85; }
+    .sec-intro strong { color: var(--text); font-weight: 400; }
 
-.guide-disclaimer {
-  margin-top: 2rem;
-  font-size: 10.5px; color: var(--text3);
-  line-height: 1.7;
-  border-left: 2px solid var(--border2);
-  padding-left: 1rem;
-  max-width: 600px;
-}
+    /* ── How it helps (benefit grid) ── */
+    .feat-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px;
+      background: var(--border); border: 1px solid var(--border);
+      border-radius: 6px; overflow: hidden; margin-top: 1rem;
+    }
+    .feat-card { background: var(--bg-mid); padding: 1.75rem 1.6rem 2rem; transition: background 0.2s; }
+    .feat-card:hover { background: #0a1510; }
+    .feat-title {
+      font-family: var(--fi); font-weight: 600; font-size: 14px;
+      color: var(--text); margin-bottom: 0.7rem; letter-spacing: -0.005em;
+    }
+    .feat-text { font-size: 12px; color: var(--text2); line-height: 1.75; }
 
-/* ── Footer ── */
-footer { border-top: 1px solid var(--border); padding: 2.5rem 0; }
-.foot-inner {
-  display: flex; justify-content: space-between;
-  align-items: center; flex-wrap: wrap; gap: 1rem;
-}
-.foot-meta { font-size: 10px; color: var(--text3); text-align: center; line-height: 1.8; width: 100%; }
-.foot-meta a { color: var(--text3); text-decoration: none; }
-.foot-meta a:hover { color: var(--text2); }
+    /* ── Feature list (privacy / pricing) ── */
+    #privacy { border-top: 1px solid var(--border); background: linear-gradient(180deg, rgba(13,32,22,0.25), transparent); }
+    .feature-list { list-style: none; margin-top: 1.75rem; display: grid; gap: 1rem; max-width: 640px; }
+    .feature-list li {
+      font-size: 12.5px; color: var(--text2); line-height: 1.7;
+      padding-left: 1.1rem; position: relative;
+    }
+    .feature-list li::before {
+      content: ''; position: absolute; left: 0; top: 0.55em;
+      width: 5px; height: 5px; border-radius: 50%; background: var(--green);
+    }
+    .feature-list li strong { color: var(--text); font-weight: 600; }
+    .sec-close { margin-top: 1.75rem; font-size: 12.5px; color: var(--text2); line-height: 1.8; max-width: 600px; }
+    .sec-close strong { color: var(--text); font-weight: 400; }
 
-/* ── Animations ── */
-@keyframes up {
-  from { opacity: 0; transform: translateY(16px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-.rev { opacity: 0; transform: translateY(12px); transition: opacity 0.55s ease, transform 0.55s ease; }
-.rev.in { opacity: 1; transform: none; }
+    #pricing { border-top: 1px solid var(--border); }
+    .price-note {
+      margin-top: 1.75rem; font-size: 10.5px; color: var(--text3);
+      border-left: 2px solid var(--border2); padding-left: 1rem; max-width: 560px; line-height: 1.7;
+    }
 
-/* ── Responsive ── */
-@media (max-width: 900px) {
-  .guide-grid { grid-template-columns: repeat(2, 1fr); }
-}
-@media (max-width: 700px) {
-  .strip-inner { grid-template-columns: repeat(2, 1fr); }
-  .cls:nth-child(2) { border-right: none; }
-  .cls:nth-child(3) { border-top: 1px solid var(--border); }
-  .cls:nth-child(4) { border-top: 1px solid var(--border); border-right: none; }
-  .nav-links li:not(:last-child) { display: none; }
-  .guide-grid { grid-template-columns: 1fr; }
-}
-</style>
+    /* ── FAQ ── */
+    #faq { border-top: 1px solid var(--border); }
+    .faq-item { border-bottom: 1px solid var(--border); }
+    .faq-item summary {
+      list-style: none; cursor: pointer; padding: 1.15rem 0;
+      font-family: var(--fi); font-weight: 600; font-size: 13.5px; color: var(--text);
+      display: flex; justify-content: space-between; align-items: center; gap: 1rem;
+    }
+    .faq-item summary::-webkit-details-marker { display: none; }
+    .faq-item summary::after {
+      content: '+'; color: var(--text3); font-family: var(--fm); font-size: 16px; flex-shrink: 0; transition: transform 0.2s;
+    }
+    .faq-item[open] summary::after { content: '−'; }
+    .faq-answer { font-size: 12.5px; color: var(--text2); line-height: 1.8; padding: 0 0 1.3rem; max-width: 720px; }
+    .faq-answer strong { color: var(--text); font-weight: 400; }
+
+    /* ── Closing ── */
+    #closing { border-top: 1px solid var(--border); text-align: center; }
+    #closing .wrap { display: flex; flex-direction: column; align-items: center; }
+    .close-title {
+      font-family: var(--fi); font-weight: 700; font-size: clamp(22px, 4vw, 34px);
+      color: var(--text); letter-spacing: -0.01em; margin-bottom: 1.25rem; max-width: 620px;
+    }
+    .close-body { max-width: 540px; font-size: 13.5px; color: var(--text2); line-height: 1.85; margin-bottom: 2.25rem; }
+
+    /* ── Footer ── */
+    footer { border-top: 1px solid var(--border); padding: 2.5rem 0; }
+    .foot-disclaimer { font-size: 10px; color: var(--text3); line-height: 1.7; max-width: 640px; margin: 0 auto 1.25rem; text-align: center; }
+    .foot-meta { font-size: 10px; color: var(--text3); text-align: center; line-height: 1.8; }
+    .foot-meta a { color: var(--text3); text-decoration: none; }
+    .foot-meta a:hover { color: var(--text2); }
+
+    /* ── Animations ── */
+    @keyframes up { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+    .rev { opacity: 0; transform: translateY(12px); transition: opacity 0.55s ease, transform 0.55s ease; }
+    .rev.in { opacity: 1; transform: none; }
+
+    /* ── Responsive ── */
+    @media (max-width: 900px) { .feat-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 700px) {
+      .strip-inner { grid-template-columns: repeat(2, 1fr); }
+      .cls:nth-child(2) { border-right: none; }
+      .cls:nth-child(3) { border-top: 1px solid var(--border); }
+      .cls:nth-child(4) { border-top: 1px solid var(--border); border-right: none; }
+    }
+  </style>
 </head>
 <body>
 
 <!-- Nav -->
 <nav>
   <div class="nav-inner">
+    <a href="#hero" class="logo" aria-label="Naps0" translate="no"><span class="lN">N</span><span class="lA">a</span><span class="lP">p</span><span class="lS">s</span><span class="l0">0</span></a>
     <ul class="nav-links">
       <li><a href="mailto:contact@naps0.com" data-i18n="nav_contact">Contact</a></li>
       <li><button class="lang-btn" id="langBtn" onclick="toggleLang()">ES</button></li>
@@ -355,18 +333,17 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; }
 <!-- Hero -->
 <section id="hero">
   <div class="wrap">
-    <p class="hero-eyebrow" data-i18n="hero_eyebrow">Baby Pain Detection · On-Device</p>
+    <p class="hero-eyebrow" data-i18n="hero_eyebrow">On-device baby cry companion</p>
     <h1 class="hero-wordmark" aria-label="Naps0" translate="no">
       <span class="lN">N</span><span class="lA">a</span><span class="lP">p</span><span class="lS">s</span><span class="l0">0</span>
     </h1>
-    <p class="hero-body" data-i18n="hero_body">
-      Naps0 detects when your baby cries in <strong>pain</strong> and alerts you immediately. For hunger, discomfort and tiredness, it gives you pattern-based guidance — useful, though with higher individual variability. Everything runs on your phone. <strong>No cloud, no data upload, no subscription.</strong>
-    </p>
-    <div class="hero-sep"></div>
-    <p class="hero-cta-label" data-i18n="hero_cta_label">Currently in private beta · Research paper in preparation</p>
+    <p class="hero-headline" data-i18n="hero_headline">Understand your baby better, even at 3 in the morning.</p>
+    <p class="hero-body" data-i18n="hero_body">Naps0 listens to your baby's cry and helps you understand what they might need: hunger, sleep, discomfort or pain. All in real time, and <strong>without the audio ever leaving your phone</strong>.</p>
+    <p class="hero-cta-label" data-i18n="hero_cta_label">At launch: 10 days free, then a single payment. No subscription, no automatic charges.</p>
     <div class="hero-actions">
-      <a href="mailto:contact@naps0.com" class="btn btn-ghost" data-i18n="hero_btn">contact@naps0.com</a>
+      <a href="mailto:contact@naps0.com?subject=Naps0%20launch%20waitlist" class="btn btn-primary" data-i18n="cta_waitlist">Notify me at launch</a>
     </div>
+    <p class="hero-trust" data-i18n="hero_trust">100% on your phone · The audio never leaves it · No cloud, no accounts, no tracking</p>
   </div>
 </section>
 
@@ -377,101 +354,150 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; }
       <div class="cls" data-c="pain">
         <div class="cls-dot"></div>
         <div class="cls-name" data-i18n="cls_pain">Pain</div>
-        <div class="cls-sub" data-i18n="cls_pain_sub">Detected · Universal neurological basis</div>
+        <div class="cls-sub" data-i18n="cls_pain_sub">Priority heads-up</div>
       </div>
       <div class="cls" data-c="hunger">
         <div class="cls-dot"></div>
         <div class="cls-name" data-i18n="cls_hunger">Hunger</div>
-        <div class="cls-sub" data-i18n="cls_hunger_sub">Estimated · Indicative pattern</div>
+        <div class="cls-sub" data-i18n="cls_guidance">Guidance</div>
       </div>
       <div class="cls" data-c="discomfort">
         <div class="cls-dot"></div>
         <div class="cls-name" data-i18n="cls_discomfort">Discomfort</div>
-        <div class="cls-sub" data-i18n="cls_discomfort_sub">Estimated · Indicative pattern</div>
+        <div class="cls-sub" data-i18n="cls_guidance">Guidance</div>
       </div>
       <div class="cls" data-c="tired">
         <div class="cls-dot"></div>
-        <div class="cls-name" data-i18n="cls_tired">Tired</div>
-        <div class="cls-sub" data-i18n="cls_tired_sub">Estimated · Indicative pattern</div>
+        <div class="cls-name" data-i18n="cls_tired">Sleep</div>
+        <div class="cls-sub" data-i18n="cls_guidance">Guidance</div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- Guide section -->
-<section id="guide" class="rev">
+<!-- How it helps -->
+<section id="help" class="rev">
   <div class="wrap">
-    <div class="guide-header">
-      <p class="guide-eyebrow" data-i18n="guide_eyebrow">For caregivers</p>
-      <h2 class="guide-title" data-i18n="guide_title">Understanding your baby's cry</h2>
-      <p class="guide-intro" data-i18n="guide_intro">
-        Crying is your baby's only way to communicate. Science draws a clear line between pain and other cries — <strong>pain engages neurological pathways shared across all mammals</strong>, making it acoustically distinct. The other three categories are pattern-based orientations, not deterministic classifications.
-      </p>
+    <div class="sec-header">
+      <p class="sec-eyebrow" data-i18n="help_eyebrow">How it helps</p>
+      <h2 class="sec-title" data-i18n="help_title">Less guessing. More calm.</h2>
+    </div>
+    <div class="feat-grid">
+      <div class="feat-card">
+        <div class="feat-title" data-i18n="help_b1_t">Less guessing, more calm</div>
+        <p class="feat-text" data-i18n="help_b1_x">When your baby cries and you don't know what's wrong, Naps0 gives you a hint of what they might need. So you respond with more confidence and less worry.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-title" data-i18n="help_b2_t">It flags what matters most, first</div>
+        <p class="feat-text" data-i18n="help_b2_x">If the cry suggests intense distress, Naps0 gives you a priority heads-up so you can react sooner. The rest of the needs — hunger, sleep, discomfort — it shows as guidance.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-title" data-i18n="help_b3_t">It works while you rest</div>
+        <p class="feat-text" data-i18n="help_b3_x">Naps0 listens in the background and alerts you instantly when it picks something up. You don't have to watch the screen: you rest, the app stays attentive.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-title" data-i18n="help_b4_t">Made for exhausted parents</div>
+        <p class="feat-text" data-i18n="help_b4_x">No complicated setup, no jargon. You open it, it listens, it alerts you. Made for those nights when you have barely any energy left.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Privacy -->
+<section id="privacy" class="rev">
+  <div class="wrap">
+    <div class="sec-header">
+      <p class="sec-eyebrow" data-i18n="priv_eyebrow">Privacy</p>
+      <h2 class="sec-title" data-i18n="priv_title">The most intimate sound in your home shouldn't travel to any server.</h2>
+      <p class="sec-intro" data-i18n="priv_body">With Naps0, everything happens inside your phone. Your baby's cry is processed right there, on your device, and <strong>the audio never leaves the phone</strong>.</p>
+    </div>
+    <ul class="feature-list">
+      <li data-i18n="priv_li1"><strong>No cloud.</strong> We don't upload anything to any server.</li>
+      <li data-i18n="priv_li2"><strong>No accounts.</strong> We don't ask you to sign up or hand over an email to use the app.</li>
+      <li data-i18n="priv_li3"><strong>No tracking.</strong> We don't follow you, we don't build profiles, we don't sell your data.</li>
+      <li data-i18n="priv_li4"><strong>Works offline.</strong> Since everything happens on your phone, it doesn't need internet to listen and alert you.</li>
+    </ul>
+    <p class="sec-close" data-i18n="priv_close">Unlike apps that send the sound to the cloud, with Naps0 your baby's voice stays where it belongs: with you.</p>
+  </div>
+</section>
+
+<!-- Pricing -->
+<section id="pricing" class="rev">
+  <div class="wrap">
+    <div class="sec-header">
+      <p class="sec-eyebrow" data-i18n="price_eyebrow">Pricing</p>
+      <h2 class="sec-title" data-i18n="price_title">Try it free. Then one payment. And it's yours.</h2>
+      <p class="sec-intro" data-i18n="price_body">Start with <strong>10 days free</strong>, no card and no commitment. When they're up, if you want to keep using it, you make a single payment and the app is yours.</p>
+    </div>
+    <ul class="feature-list">
+      <li data-i18n="price_li1"><strong>One payment, one time.</strong> No monthly fees, no subscription.</li>
+      <li data-i18n="price_li2"><strong>No automatic charges.</strong> We don't store your card and we don't charge you when the trial ends. You decide and make the payment yourself.</li>
+      <li data-i18n="price_li3"><strong>Everything included.</strong> The one-time payment unlocks the full app. No extra purchases inside.</li>
+      <li data-i18n="price_li4"><strong>No ads.</strong> No advertising and no selling your data. Ever.</li>
+    </ul>
+    <p class="price-note" data-i18n="price_note">One-time price shown in your Google Play store. Coming to Android.</p>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" class="rev">
+  <div class="wrap">
+    <div class="sec-header">
+      <p class="sec-eyebrow" data-i18n="faq_eyebrow">FAQ</p>
+      <h2 class="sec-title" data-i18n="faq_title">Questions parents ask</h2>
     </div>
 
-    <div class="guide-grid">
+    <details class="faq-item">
+      <summary data-i18n="faq_q1">How does Naps0 work?</summary>
+      <div class="faq-answer" data-i18n="faq_a1">It listens to your baby's cry and, in real time, helps you understand what they might need: hunger, sleep, discomfort or pain. If the cry suggests intense distress, it gives you a priority heads-up. All the analysis happens inside your phone.</div>
+    </details>
+    <details class="faq-item">
+      <summary data-i18n="faq_q2">Does Naps0 diagnose whether something is wrong with my baby?</summary>
+      <div class="faq-answer" data-i18n="faq_a2">No. Naps0 is a help to understand your baby better, <strong>not a diagnosis and not a substitute for your pediatrician</strong>. It gives you a hint of what they might need, but it doesn't detect illnesses and doesn't replace a professional's judgment. For any health concern, always check with your pediatrician.</div>
+    </details>
+    <details class="faq-item">
+      <summary data-i18n="faq_q3">Is my baby's audio stored or uploaded anywhere?</summary>
+      <div class="faq-answer" data-i18n="faq_a3">No. Everything is processed on your own phone and <strong>the audio never leaves it</strong>. No cloud, no servers, no accounts. It even works without an internet connection.</div>
+    </details>
+    <details class="faq-item">
+      <summary data-i18n="faq_q4">Will I be charged when the 10 days end?</summary>
+      <div class="faq-answer" data-i18n="faq_a4">No. The 10 days are free, no card. <strong>When the trial ends nothing is charged automatically.</strong> If you want to keep using Naps0, you make a single payment yourself. It's not a subscription and there are no automatic charges.</div>
+    </details>
+    <details class="faq-item">
+      <summary data-i18n="faq_q5">Is it really a one-time payment, or do more charges come later?</summary>
+      <div class="faq-answer" data-i18n="faq_a5">It's a single payment. Just once. No fees, no renewals and no extra purchases inside the app: that payment unlocks everything.</div>
+    </details>
+    <details class="faq-item">
+      <summary data-i18n="faq_q6">What age is it for?</summary>
+      <div class="faq-answer" data-i18n="faq_a6">It's made for your baby's first year, when crying is their main way of communicating (optimized for the first 0-9 months). Outside that window it may be less reliable.</div>
+    </details>
+    <details class="faq-item">
+      <summary data-i18n="faq_q7">Do I need to buy any extra device or gadget?</summary>
+      <div class="faq-answer" data-i18n="faq_a7">No. All you need is your Android phone. No cameras, no wristbands, no extra sensors.</div>
+    </details>
+    <details class="faq-item">
+      <summary data-i18n="faq_q8">What if it doesn't always get it right?</summary>
+      <div class="faq-answer" data-i18n="faq_a8">Naps0 is one more help, not a certainty. It gives you guidance on what your baby might need so you can decide with more information, alongside your own instinct. You're still the one who knows your baby best.</div>
+    </details>
+  </div>
+</section>
 
-      <div class="guide-card" data-c="pain">
-        <div class="guide-card-header">
-          <div class="guide-dot"></div>
-          <div class="guide-card-name" data-i18n="cls_pain">Pain</div>
-        </div>
-        <span class="guide-card-badge" data-i18n="badge_pain">Detected · Solid evidence</span>
-        <p class="guide-card-text" data-i18n="guide_pain_text">
-          Immediate priority alert. Pain cry activates primitive neurological pathways — producing elevated pitch, sudden bursts and non-linear vocal phenomena. This distinction holds across species and across individual babies. Naps0 treats this as its primary signal.
-        </p>
-      </div>
-
-      <div class="guide-card" data-c="hunger">
-        <div class="guide-card-header">
-          <div class="guide-dot"></div>
-          <div class="guide-card-name" data-i18n="cls_hunger">Hunger</div>
-        </div>
-        <span class="guide-card-badge" data-i18n="badge_est">Estimated · Indicative pattern</span>
-        <p class="guide-card-text" data-i18n="guide_hunger_text">
-          A rhythmic, repetitive cry with regular pauses may indicate hunger. Naps0 detects this acoustic pattern and suggests it as a possibility — always worth checking alongside your baby's feeding schedule.
-        </p>
-      </div>
-
-      <div class="guide-card" data-c="discomfort">
-        <div class="guide-card-header">
-          <div class="guide-dot"></div>
-          <div class="guide-card-name" data-i18n="cls_discomfort">Discomfort</div>
-        </div>
-        <span class="guide-card-badge" data-i18n="badge_est">Estimated · Indicative pattern</span>
-        <p class="guide-card-text" data-i18n="guide_discomfort_text">
-          An irregular cry with tonal variations may signal physical discomfort — gas, posture, clothing or temperature. The app surfaces this possibility for you to investigate alongside other physical cues from your baby.
-        </p>
-      </div>
-
-      <div class="guide-card" data-c="tired">
-        <div class="guide-card-header">
-          <div class="guide-dot"></div>
-          <div class="guide-card-name" data-i18n="cls_tired">Tired</div>
-        </div>
-        <span class="guide-card-badge" data-i18n="badge_est">Estimated · Indicative pattern</span>
-        <p class="guide-card-text" data-i18n="guide_tired_text">
-          A softer cry with a descending pitch contour, often paired with visual tiredness cues, may indicate the need for rest. Naps0 detects this tonal pattern as a possible indicator — combined with your own observation it becomes most useful.
-        </p>
-      </div>
-
-    </div>
-
-    <p class="guide-disclaimer" data-i18n="guide_disclaimer">
-      Hunger, discomfort and tired signals are orientations, not diagnoses. Individual variation between babies is high. The app is a tool to reduce uncertainty — your intuition as a caregiver remains essential.
-    </p>
-
+<!-- Closing -->
+<section id="closing" class="rev">
+  <div class="wrap">
+    <h2 class="close-title" data-i18n="close_title">Tonight could be a little easier.</h2>
+    <p class="close-body" data-i18n="close_body">Naps0 is coming to Android. Join the waitlist and be the first to know when it launches — 10 days free, then a single payment. No cloud, no accounts, no subscription.</p>
+    <a href="mailto:contact@naps0.com?subject=Naps0%20launch%20waitlist" class="btn btn-primary" data-i18n="cta_waitlist">Notify me at launch</a>
   </div>
 </section>
 
 <!-- Footer -->
 <footer>
   <div class="wrap">
-    <div class="foot-inner">
-      <div class="foot-meta">
-        <a href="mailto:contact@naps0.com">contact@naps0.com</a><br>
-        <span data-i18n="footer_copy">© 2026 Naps0 · App proprietary</span>
-      </div>
+    <p class="foot-disclaimer" data-i18n="foot_disclaimer">Naps0 is a consumer aid for parents, not a medical device or a diagnostic tool. For any concern about your baby's health, check with your pediatrician.</p>
+    <div class="foot-meta">
+      <a href="mailto:contact@naps0.com">contact@naps0.com</a><br>
+      <span data-i18n="footer_copy">© 2026 Naps0 · App proprietary</span>
     </div>
   </div>
 </footer>
@@ -480,56 +506,130 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; }
 /* ── i18n ── */
 const translations = {
   en: {
-    nav_contact:      'Contact',
-    hero_eyebrow:     'Baby Pain Detection · On-Device',
-    hero_body:        'Naps0 detects when your baby cries in <strong>pain</strong> and alerts you immediately. For hunger, discomfort and tiredness, it gives you pattern-based guidance — useful, though with higher individual variability. Everything runs on your phone. <strong>No cloud, no data upload, no subscription.</strong>',
-    hero_cta_label:   'Currently in private beta · Research paper in preparation',
-    hero_btn:         'contact@naps0.com',
-    cls_pain:         'Pain',
-    cls_hunger:       'Hunger',
-    cls_discomfort:   'Discomfort',
-    cls_tired:        'Tired',
-    cls_pain_sub:     'Detected · Universal neurological basis',
-    cls_hunger_sub:   'Estimated · Indicative pattern',
-    cls_discomfort_sub: 'Estimated · Indicative pattern',
-    cls_tired_sub:    'Estimated · Indicative pattern',
-    guide_eyebrow:    'For caregivers',
-    guide_title:      'Understanding your baby\'s cry',
-    guide_intro:      'Crying is your baby\'s only way to communicate. Science draws a clear line between pain and other cries — <strong>pain engages neurological pathways shared across all mammals</strong>, making it acoustically distinct. The other three categories are pattern-based orientations, not deterministic classifications.',
-    badge_pain:       'Detected · Solid evidence',
-    badge_est:        'Estimated · Indicative pattern',
-    guide_pain_text:  'Immediate priority alert. Pain cry activates primitive neurological pathways — producing elevated pitch, sudden bursts and non-linear vocal phenomena. This distinction holds across species and across individual babies. Naps0 treats this as its primary signal.',
-    guide_hunger_text: 'A rhythmic, repetitive cry with regular pauses may indicate hunger. Naps0 detects this acoustic pattern and suggests it as a possibility — always worth checking alongside your baby\'s feeding schedule.',
-    guide_discomfort_text: 'An irregular cry with tonal variations may signal physical discomfort — gas, posture, clothing or temperature. The app surfaces this possibility for you to investigate alongside other physical cues from your baby.',
-    guide_tired_text: 'A softer cry with a descending pitch contour, often paired with visual tiredness cues, may indicate the need for rest. Naps0 detects this tonal pattern as a possible indicator — combined with your own observation it becomes most useful.',
-    guide_disclaimer: 'Hunger, discomfort and tired signals are orientations, not diagnoses. Individual variation between babies is high. The app is a tool to reduce uncertainty — your intuition as a caregiver remains essential.',
-    footer_copy:      '© 2026 Naps0 · App proprietary',
+    nav_contact:    'Contact',
+    hero_eyebrow:   'On-device baby cry companion',
+    hero_headline:  'Understand your baby better, even at 3 in the morning.',
+    hero_body:      "Naps0 listens to your baby's cry and helps you understand what they might need: hunger, sleep, discomfort or pain. All in real time, and <strong>without the audio ever leaving your phone</strong>.",
+    hero_cta_label: 'At launch: 10 days free, then a single payment. No subscription, no automatic charges.',
+    cta_waitlist:   'Notify me at launch',
+    hero_trust:     '100% on your phone · The audio never leaves it · No cloud, no accounts, no tracking',
+    cls_pain:       'Pain',
+    cls_hunger:     'Hunger',
+    cls_discomfort: 'Discomfort',
+    cls_tired:      'Sleep',
+    cls_pain_sub:   'Priority heads-up',
+    cls_guidance:   'Guidance',
+    help_eyebrow:   'How it helps',
+    help_title:     'Less guessing. More calm.',
+    help_b1_t:      'Less guessing, more calm',
+    help_b1_x:      "When your baby cries and you don't know what's wrong, Naps0 gives you a hint of what they might need. So you respond with more confidence and less worry.",
+    help_b2_t:      'It flags what matters most, first',
+    help_b2_x:      'If the cry suggests intense distress, Naps0 gives you a priority heads-up so you can react sooner. The rest of the needs — hunger, sleep, discomfort — it shows as guidance.',
+    help_b3_t:      'It works while you rest',
+    help_b3_x:      "Naps0 listens in the background and alerts you instantly when it picks something up. You don't have to watch the screen: you rest, the app stays attentive.",
+    help_b4_t:      'Made for exhausted parents',
+    help_b4_x:      'No complicated setup, no jargon. You open it, it listens, it alerts you. Made for those nights when you have barely any energy left.',
+    priv_eyebrow:   'Privacy',
+    priv_title:     "The most intimate sound in your home shouldn't travel to any server.",
+    priv_body:      "With Naps0, everything happens inside your phone. Your baby's cry is processed right there, on your device, and <strong>the audio never leaves the phone</strong>.",
+    priv_li1:       '<strong>No cloud.</strong> We don\'t upload anything to any server.',
+    priv_li2:       '<strong>No accounts.</strong> We don\'t ask you to sign up or hand over an email to use the app.',
+    priv_li3:       '<strong>No tracking.</strong> We don\'t follow you, we don\'t build profiles, we don\'t sell your data.',
+    priv_li4:       '<strong>Works offline.</strong> Since everything happens on your phone, it doesn\'t need internet to listen and alert you.',
+    priv_close:     "Unlike apps that send the sound to the cloud, with Naps0 your baby's voice stays where it belongs: with you.",
+    price_eyebrow:  'Pricing',
+    price_title:    "Try it free. Then one payment. And it's yours.",
+    price_body:     'Start with <strong>10 days free</strong>, no card and no commitment. When they\'re up, if you want to keep using it, you make a single payment and the app is yours.',
+    price_li1:      '<strong>One payment, one time.</strong> No monthly fees, no subscription.',
+    price_li2:      '<strong>No automatic charges.</strong> We don\'t store your card and we don\'t charge you when the trial ends. You decide and make the payment yourself.',
+    price_li3:      '<strong>Everything included.</strong> The one-time payment unlocks the full app. No extra purchases inside.',
+    price_li4:      '<strong>No ads.</strong> No advertising and no selling your data. Ever.',
+    price_note:     'One-time price shown in your Google Play store. Coming to Android.',
+    faq_eyebrow:    'FAQ',
+    faq_title:      'Questions parents ask',
+    faq_q1:         'How does Naps0 work?',
+    faq_a1:         'It listens to your baby\'s cry and, in real time, helps you understand what they might need: hunger, sleep, discomfort or pain. If the cry suggests intense distress, it gives you a priority heads-up. All the analysis happens inside your phone.',
+    faq_q2:         'Does Naps0 diagnose whether something is wrong with my baby?',
+    faq_a2:         'No. Naps0 is a help to understand your baby better, <strong>not a diagnosis and not a substitute for your pediatrician</strong>. It gives you a hint of what they might need, but it doesn\'t detect illnesses and doesn\'t replace a professional\'s judgment. For any health concern, always check with your pediatrician.',
+    faq_q3:         'Is my baby\'s audio stored or uploaded anywhere?',
+    faq_a3:         'No. Everything is processed on your own phone and <strong>the audio never leaves it</strong>. No cloud, no servers, no accounts. It even works without an internet connection.',
+    faq_q4:         'Will I be charged when the 10 days end?',
+    faq_a4:         'No. The 10 days are free, no card. <strong>When the trial ends nothing is charged automatically.</strong> If you want to keep using Naps0, you make a single payment yourself. It\'s not a subscription and there are no automatic charges.',
+    faq_q5:         'Is it really a one-time payment, or do more charges come later?',
+    faq_a5:         'It\'s a single payment. Just once. No fees, no renewals and no extra purchases inside the app: that payment unlocks everything.',
+    faq_q6:         'What age is it for?',
+    faq_a6:         'It\'s made for your baby\'s first year, when crying is their main way of communicating (optimized for the first 0-9 months). Outside that window it may be less reliable.',
+    faq_q7:         'Do I need to buy any extra device or gadget?',
+    faq_a7:         'No. All you need is your Android phone. No cameras, no wristbands, no extra sensors.',
+    faq_q8:         'What if it doesn\'t always get it right?',
+    faq_a8:         'Naps0 is one more help, not a certainty. It gives you guidance on what your baby might need so you can decide with more information, alongside your own instinct. You\'re still the one who knows your baby best.',
+    close_title:    'Tonight could be a little easier.',
+    close_body:     'Naps0 is coming to Android. Join the waitlist and be the first to know when it launches — 10 days free, then a single payment. No cloud, no accounts, no subscription.',
+    foot_disclaimer:'Naps0 is a consumer aid for parents, not a medical device or a diagnostic tool. For any concern about your baby\'s health, check with your pediatrician.',
+    footer_copy:    '© 2026 Naps0 · App proprietary',
   },
   es: {
-    nav_contact:      'Contacto',
-    hero_eyebrow:     'Detección de dolor en bebés · IA en el dispositivo',
-    hero_body:        'Naps0 detecta cuando tu bebé llora de <strong>dolor</strong> y te alerta de inmediato. Para el hambre, la molestia y el sueño, te da una orientación basada en el patrón del llanto — útil, aunque con mayor variabilidad individual. Todo ocurre en tu móvil. <strong>Sin nube, sin subir datos, sin suscripción.</strong>',
-    hero_cta_label:   'Actualmente en beta privada · Paper científico en preparación',
-    hero_btn:         'contact@naps0.com',
-    cls_pain:         'Dolor',
-    cls_hunger:       'Hambre',
-    cls_discomfort:   'Molestia',
-    cls_tired:        'Sueño',
-    cls_pain_sub:     'Detectado · Base neurológica universal',
-    cls_hunger_sub:   'Estimado · Patrón orientativo',
-    cls_discomfort_sub: 'Estimado · Patrón orientativo',
-    cls_tired_sub:    'Estimado · Patrón orientativo',
-    guide_eyebrow:    'Para cuidadores',
-    guide_title:      'Entender el llanto de tu bebé',
-    guide_intro:      'El llanto es la única forma que tiene tu bebé de comunicarse. La ciencia traza una línea clara entre el dolor y el resto — <strong>el llanto de dolor activa vías neurológicas compartidas por todos los mamíferos</strong>, lo que lo hace acústicamente distinto. Las otras tres categorías son orientaciones basadas en patrones, no clasificaciones deterministas.',
-    badge_pain:       'Detectado · Evidencia sólida',
-    badge_est:        'Estimado · Patrón orientativo',
-    guide_pain_text:  'Alerta de máxima prioridad. El llanto de dolor activa vías neurológicas primitivas — produciendo tono elevado, arranques bruscos y fenómenos vocales no lineales. Esta distinción se mantiene entre especies y entre bebés individuales. Naps0 lo trata como su señal principal.',
-    guide_hunger_text: 'Un llanto rítmico y repetitivo con pausas regulares puede indicar hambre. Naps0 detecta este patrón acústico y lo sugiere como posibilidad — siempre vale la pena verificarlo junto con el horario de alimentación de tu bebé.',
-    guide_discomfort_text: 'Un llanto irregular con variaciones de tono puede indicar malestar físico — gases, postura, ropa o temperatura. La app muestra esta posibilidad para que la explores junto con otras señales físicas de tu bebé.',
-    guide_tired_text: 'Un llanto más suave con contorno de tono descendente, frecuentemente acompañado de señales visuales de cansancio, puede indicar necesidad de descanso. Naps0 detecta este patrón tonal como posible indicador — combinado con tu propia observación resulta más útil.',
-    guide_disclaimer: 'Las señales de hambre, molestia y sueño son orientaciones, no diagnósticos. La variabilidad individual entre bebés es alta. La app es una herramienta para reducir la incertidumbre — tu intuición como cuidador sigue siendo esencial.',
-    footer_copy:      '© 2026 Naps0 · App de uso exclusivo',
+    nav_contact:    'Contacto',
+    hero_eyebrow:   'Acompañante del llanto · en tu móvil',
+    hero_headline:  'Entiende mejor a tu bebé, incluso a las 3 de la mañana.',
+    hero_body:      'Naps0 escucha el llanto de tu bebé y te ayuda a entender qué puede necesitar: hambre, sueño, molestia o dolor. Todo en tiempo real, y <strong>sin que el audio salga nunca de tu móvil</strong>.',
+    hero_cta_label: 'En el lanzamiento: 10 días gratis, luego un único pago. Sin suscripción ni cargos automáticos.',
+    cta_waitlist:   'Avísame en el lanzamiento',
+    hero_trust:     '100% en tu móvil · El audio nunca sale · Sin nube, sin cuentas, sin rastreo',
+    cls_pain:       'Dolor',
+    cls_hunger:     'Hambre',
+    cls_discomfort: 'Molestia',
+    cls_tired:      'Sueño',
+    cls_pain_sub:   'Aviso prioritario',
+    cls_guidance:   'Orientación',
+    help_eyebrow:   'Cómo te ayuda',
+    help_title:     'Menos adivinar. Más calma.',
+    help_b1_t:      'Menos adivinar, más calma',
+    help_b1_x:      'Cuando tu bebé llora y no sabes qué le pasa, Naps0 te da una pista de lo que puede necesitar. Así respondes con más confianza y menos angustia.',
+    help_b2_t:      'Te avisa primero de lo que más importa',
+    help_b2_x:      'Si el llanto sugiere un malestar intenso, Naps0 te lo señala como aviso prioritario para que reacciones cuanto antes. El resto de necesidades — hambre, sueño, molestia — te las muestra como orientación.',
+    help_b3_t:      'Funciona mientras descansas',
+    help_b3_x:      'Naps0 escucha de fondo y te avisa al instante cuando detecta algo. No tienes que estar pendiente de la pantalla: tú descansas, la app está atenta.',
+    help_b4_t:      'Pensada para padres agotados',
+    help_b4_x:      'Sin configuraciones complicadas ni jerga. Abres, escucha, te avisa. Pensada para esas noches en las que apenas te quedan fuerzas.',
+    priv_eyebrow:   'Privacidad',
+    priv_title:     'Lo más íntimo de tu casa no debería viajar a ningún servidor.',
+    priv_body:      'En Naps0, todo ocurre dentro de tu móvil. El llanto de tu bebé se procesa ahí mismo, en tu dispositivo, y <strong>el audio nunca sale del teléfono</strong>.',
+    priv_li1:       '<strong>Sin nube.</strong> No subimos nada a ningún servidor.',
+    priv_li2:       '<strong>Sin cuentas.</strong> No te pedimos registro ni correo para usar la app.',
+    priv_li3:       '<strong>Sin rastreo.</strong> No te seguimos, no creamos perfiles, no vendemos tus datos.',
+    priv_li4:       '<strong>Funciona sin conexión.</strong> Como todo pasa en tu móvil, no necesita internet para escuchar y avisarte.',
+    priv_close:     'A diferencia de las apps que mandan el sonido a la nube, con Naps0 la voz de tu bebé se queda donde tiene que estar: contigo.',
+    price_eyebrow:  'Precio',
+    price_title:    'Pruébala gratis. Luego, un único pago. Y ya es tuya.',
+    price_body:     'Empieza con <strong>10 días gratis</strong>, sin tarjeta y sin compromiso. Cuando se acaben, si quieres seguir usándola, haces un único pago y la app es tuya.',
+    price_li1:      '<strong>Un solo pago, una sola vez.</strong> Sin cuotas mensuales, sin suscripción.',
+    price_li2:      '<strong>Sin cargos automáticos.</strong> No guardamos tu tarjeta ni te cobramos al acabar la prueba. El pago lo decides y lo haces tú.',
+    price_li3:      '<strong>Todo incluido.</strong> El pago único desbloquea la app completa. Sin compras extra dentro.',
+    price_li4:      '<strong>Sin anuncios.</strong> Ni publicidad ni venta de tus datos. Nunca.',
+    price_note:     'El precio único lo muestra tu tienda de Google Play. Próximamente en Android.',
+    faq_eyebrow:    'Preguntas',
+    faq_title:      'Lo que preguntan los padres',
+    faq_q1:         '¿Cómo funciona Naps0?',
+    faq_a1:         'Escucha el llanto de tu bebé y, en tiempo real, te ayuda a entender qué puede necesitar: hambre, sueño, molestia o dolor. Si el llanto sugiere un malestar intenso, te avisa como prioridad. Todo el análisis ocurre dentro de tu móvil.',
+    faq_q2:         '¿Naps0 diagnostica si a mi bebé le pasa algo?',
+    faq_a2:         'No. Naps0 es una ayuda para entender mejor a tu bebé, <strong>no un diagnóstico ni un sustituto del pediatra</strong>. Te da una pista de lo que puede necesitar, pero no detecta enfermedades ni reemplaza el criterio de un profesional. Ante cualquier duda de salud, consulta siempre con tu pediatra.',
+    faq_q3:         '¿El audio de mi bebé se guarda o se sube a algún sitio?',
+    faq_a3:         'No. Todo se procesa en tu propio móvil y <strong>el audio nunca sale del teléfono</strong>. Sin nube, sin servidores, sin cuentas. Funciona incluso sin conexión a internet.',
+    faq_q4:         '¿Me cobrarán al acabar los 10 días?',
+    faq_a4:         'No. Los 10 días son gratis, sin tarjeta. <strong>Cuando termine la prueba no se te cobra nada automáticamente.</strong> Si quieres seguir usando Naps0, haces tú mismo un único pago. No es una suscripción y no hay cargos automáticos.',
+    faq_q5:         '¿Es un pago único de verdad o luego vienen más cobros?',
+    faq_a5:         'Es un único pago. Una sola vez. Sin cuotas, sin renovaciones y sin compras extra dentro de la app: ese pago desbloquea todo.',
+    faq_q6:         '¿Para qué edad sirve?',
+    faq_a6:         'Está pensada para el primer año del bebé, cuando el llanto es la principal forma de comunicación (está optimizada para los primeros 0-9 meses). Fuera de esa ventana puede ser menos fiable.',
+    faq_q7:         '¿Necesito comprar algún aparato o dispositivo extra?',
+    faq_a7:         'No. Solo necesitas tu móvil Android. Nada de cámaras, pulseras ni sensores adicionales.',
+    faq_q8:         '¿Funciona si no acierta siempre?',
+    faq_a8:         'Naps0 es una ayuda más, no una certeza. Te orienta sobre lo que tu bebé puede necesitar para que decidas con más información, junto a tu propio instinto. Tú sigues siendo quien mejor conoce a tu bebé.',
+    close_title:    'Esta noche puede ser un poco más fácil.',
+    close_body:     'Naps0 llega pronto a Android. Apúntate a la lista y sé de los primeros en saberlo cuando se lance — 10 días gratis, luego un único pago. Sin nube, sin cuentas, sin suscripción.',
+    foot_disclaimer:'Naps0 es una ayuda de consumo para padres, no un dispositivo médico ni una herramienta de diagnóstico. Ante cualquier duda sobre la salud de tu bebé, consulta con tu pediatra.',
+    footer_copy:    '© 2026 Naps0 · App de uso exclusivo',
   }
 };
 
@@ -545,12 +645,17 @@ function applyLang(lang) {
   document.documentElement.lang = lang;
   document.getElementById('langBtn').textContent = lang === 'en' ? 'ES' : 'EN';
   document.title = lang === 'es'
-    ? 'Naps0 — Monitor de dolor en bebés'
-    : 'Naps0 — Baby Pain Detection';
+    ? "Naps0 — Entiende el llanto de tu bebé"
+    : "Naps0 — Understand your baby's cry";
   const desc = document.querySelector('meta[name="description"]');
   if (desc) desc.content = lang === 'es'
-    ? 'Naps0 detecta cuando tu bebé llora de dolor y te alerta de inmediato. IA en el dispositivo, sin nube, sin suscripción.'
-    : 'Naps0 detects when your baby cries in pain and alerts you immediately. On-device AI, no cloud, no subscription.';
+    ? 'Naps0 te ayuda a entender qué puede necesitar tu bebé — hambre, sueño, molestia o dolor — en tiempo real y 100% en tu móvil. Sin nube, sin cuentas, sin suscripción.'
+    : "Naps0 helps you understand what your baby might need — hunger, sleep, discomfort or pain — in real time, 100% on your phone. No cloud, no accounts, no subscription.";
+}
+
+/* Default to Spanish for es-* browsers (primary launch market) */
+if (navigator.language && navigator.language.toLowerCase().startsWith('es')) {
+  applyLang('es');
 }
 
 function toggleLang() {
