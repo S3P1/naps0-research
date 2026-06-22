@@ -4,9 +4,16 @@
   NO es la copia read-only de Z:\Labur0\naps0_v2\naps0-research\.
   Sustituye la landing "research" anterior por el copy consumer/freemium gateado (ES/EN).
   CTA = lista de espera (mailto), porque la app aun no esta en Google Play.
-  Estado: gateado PASS por marketing-reviewer (04/06/2026), ES + EN. CTA waitlist correcto
-  mientras la app no este publicada; al lanzar, cambiar mailto por la URL de Play y el copy
-  "coming to Android / proximamente" por la descarga real.
+
+  Estado v2 (consolidado 22/06/2026): "lo mejor de las dos" --
+    - base = copy gateado de abstencion (dolor = "malestar intenso / aviso prioritario", no "pantalla completa"),
+    - RECUPERADO el disclaimer del hero de la version LIVE ("una ayuda, no un diagnostico medico"),
+    - FUENTES AUTOALOJADAS (sin Google Fonts CDN -> ya no se filtra la IP del visitante a Google;
+      coherente con el discurso "sin rastreo"). Ver @font-face + FONTS_SELFHOST.md.
+  SUPERSEDE la landing actualmente LIVE en naps0.com (= copy antiguo "dolor -> pantalla completa",
+  con CDN de Google Fonts; era el _PUBLISH_landing_index.html de la raiz).
+  PENDIENTE antes de desplegar: (1) re-gate por marketing-reviewer; (2) colocar los .woff2 en ./fonts/.
+  Al lanzar: cambiar mailto por la URL de Play y "proximamente / coming to Android" por la descarga real.
 -->
 <html lang="en">
 <head>
@@ -16,11 +23,19 @@
   <meta name="description" content="Naps0 helps you understand what your baby might need — hunger, sleep, discomfort or pain — in real time, 100% on your phone. No cloud, no accounts, no subscription.">
   <meta name="theme-color" content="#020503">
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+  <!-- Fuentes AUTOALOJADAS (sin Google Fonts CDN). Definicion @font-face mas abajo en <style>.
+       Coloca los .woff2 en ./fonts/ segun FONTS_SELFHOST.md antes de desplegar. -->
 
   <style>
+    /* -- Self-hosted fonts (privacidad: cero peticiones a Google; nada sale del navegador del visitante).
+          Coloca los .woff2 indicados en FONTS_SELFHOST.md dentro de ./fonts/ al desplegar.
+          Si faltaran, el texto degrada al stack de sistema (sigue siendo privacy-clean). */
+    /* Inter se sirve como fuente VARIABLE: un solo woff2 cubre 300-900. */
+    @font-face { font-family:'Inter'; font-style:normal; font-weight:100 900; font-display:swap; src:url('./fonts/inter-var.woff2') format('woff2'); }
+    @font-face { font-family:'DM Mono'; font-style:normal; font-weight:300; font-display:swap; src:url('./fonts/dm-mono-300.woff2') format('woff2'); }
+    @font-face { font-family:'DM Mono'; font-style:normal; font-weight:400; font-display:swap; src:url('./fonts/dm-mono-400.woff2') format('woff2'); }
+    @font-face { font-family:'DM Mono'; font-style:italic; font-weight:300; font-display:swap; src:url('./fonts/dm-mono-300-italic.woff2') format('woff2'); }
+
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
@@ -49,8 +64,8 @@
       --cs: #7B3FA0;
       --c0: #ffffff;
 
-      --fi: 'Inter', sans-serif;
-      --fm: 'DM Mono', monospace;
+      --fi: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      --fm: 'DM Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
       --max: 1080px;
       --gutter: clamp(1.25rem, 5vw, 2.5rem);
     }
@@ -163,6 +178,11 @@
       opacity: 0; animation: up 0.7s ease forwards 0.4s;
     }
     .hero-body strong { color: var(--text); font-weight: 400; }
+    .hero-disclaimer {
+      max-width: 540px; font-size: 11px; color: var(--text3);
+      line-height: 1.6; font-style: italic; margin: -1.25rem auto 2.25rem;
+      opacity: 0; animation: up 0.7s ease forwards 0.44s;
+    }
 
     .hero-cta-label {
       font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
@@ -339,6 +359,7 @@
     </h1>
     <p class="hero-headline" data-i18n="hero_headline">Understand your baby better, even at 3 in the morning.</p>
     <p class="hero-body" data-i18n="hero_body">Naps0 listens to your baby's cry and helps you understand what they might need: hunger, sleep, discomfort or pain. All in real time, and <strong>without the audio ever leaving your phone</strong>.</p>
+    <p class="hero-disclaimer" data-i18n="hero_disclaimer">Naps0 is a help, not a medical diagnosis. For any health concern, check with your pediatrician.</p>
     <p class="hero-cta-label" data-i18n="hero_cta_label">At launch: 10 days free, then a single payment. No subscription, no automatic charges.</p>
     <div class="hero-actions">
       <a href="mailto:contact@naps0.com?subject=Naps0%20launch%20waitlist" class="btn btn-primary" data-i18n="cta_waitlist">Notify me at launch</a>
@@ -510,6 +531,7 @@ const translations = {
     hero_eyebrow:   'On-device baby cry companion',
     hero_headline:  'Understand your baby better, even at 3 in the morning.',
     hero_body:      "Naps0 listens to your baby's cry and helps you understand what they might need: hunger, sleep, discomfort or pain. All in real time, and <strong>without the audio ever leaving your phone</strong>.",
+    hero_disclaimer:'Naps0 is a help, not a medical diagnosis. For any health concern, check with your pediatrician.',
     hero_cta_label: 'At launch: 10 days free, then a single payment. No subscription, no automatic charges.',
     cta_waitlist:   'Notify me at launch',
     hero_trust:     '100% on your phone · The audio never leaves it · No cloud, no accounts, no tracking',
@@ -573,6 +595,7 @@ const translations = {
     hero_eyebrow:   'Acompañante del llanto · en tu móvil',
     hero_headline:  'Entiende mejor a tu bebé, incluso a las 3 de la mañana.',
     hero_body:      'Naps0 escucha el llanto de tu bebé y te ayuda a entender qué puede necesitar: hambre, sueño, molestia o dolor. Todo en tiempo real, y <strong>sin que el audio salga nunca de tu móvil</strong>.',
+    hero_disclaimer:'Naps0 es una ayuda, no un diagnóstico médico. Ante cualquier duda de salud, consulta a tu pediatra.',
     hero_cta_label: 'En el lanzamiento: 10 días gratis, luego un único pago. Sin suscripción ni cargos automáticos.',
     cta_waitlist:   'Avísame en el lanzamiento',
     hero_trust:     '100% en tu móvil · El audio nunca sale · Sin nube, sin cuentas, sin rastreo',
