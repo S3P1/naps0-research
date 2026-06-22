@@ -120,10 +120,10 @@
       letter-spacing: 0; text-decoration: none;
       display: inline-flex; align-items: baseline; line-height: 1;
     }
-    .logo .lN { color: var(--cN); margin-right: -0.135em; }
-    .logo .lA { color: var(--ca); margin-right: -0.216em; }
-    .logo .lP { color: var(--cp); margin-right: -0.1875em; }
-    .logo .lS { color: var(--cs); margin-right: -0.15625em; }
+    .logo .lN { color: var(--cN); margin-right: -0.0325em; }
+    .logo .lA { color: var(--ca); margin-right: -0.052em; }
+    .logo .lP { color: var(--cp); margin-right: -0.045em; }
+    .logo .lS { color: var(--cs); margin-right: -0.0375em; }
     .logo .l0 { color: var(--c0); }
 
     .nav-links { display: flex; gap: 1.5rem; list-style: none; align-items: center; }
@@ -166,7 +166,7 @@
     .hero-wordmark .l0 { color: var(--c0); }
 
     .hero-headline {
-      font-family: var(--fi); font-weight: 700;
+      font-family: var(--fi); font-weight: 800;
       font-size: clamp(22px, 4vw, 34px); line-height: 1.2;
       letter-spacing: -0.01em; color: var(--text);
       max-width: 640px; margin: 0 auto 1.5rem;
@@ -229,7 +229,7 @@
     .cls[data-c="discomfort"] .cls-dot { background: var(--discomfort); box-shadow: 0 0 6px var(--discomfort); }
     .cls[data-c="tired"]      .cls-dot { background: var(--tired);      box-shadow: 0 0 6px var(--tired); }
     .cls-name {
-      font-family: var(--fi); font-weight: 700;
+      font-family: var(--fi); font-weight: 800;
       font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.35rem;
     }
     .cls[data-c="pain"]       .cls-name { color: var(--pain); }
@@ -248,7 +248,7 @@
     }
     .sec-eyebrow::before { content: ''; width: 14px; height: 1px; background: var(--text3); flex-shrink: 0; }
     .sec-title {
-      font-family: var(--fi); font-weight: 700;
+      font-family: var(--fi); font-weight: 800;
       font-size: clamp(19px, 3vw, 26px); color: var(--text);
       margin-bottom: 1rem; letter-spacing: -0.01em; max-width: 720px; line-height: 1.25;
     }
@@ -310,7 +310,7 @@
     #closing { border-top: 1px solid var(--border); text-align: center; }
     #closing .wrap { display: flex; flex-direction: column; align-items: center; }
     .close-title {
-      font-family: var(--fi); font-weight: 700; font-size: clamp(22px, 4vw, 34px);
+      font-family: var(--fi); font-weight: 800; font-size: clamp(22px, 4vw, 34px);
       color: var(--text); letter-spacing: -0.01em; margin-bottom: 1.25rem; max-width: 620px;
     }
     .close-body { max-width: 540px; font-size: 13.5px; color: var(--text2); line-height: 1.85; margin-bottom: 2.25rem; }
@@ -353,7 +353,7 @@
 <!-- Hero -->
 <section id="hero">
   <div class="wrap">
-    <p class="hero-eyebrow" data-i18n="hero_eyebrow">On-device baby cry companion</p>
+    <p class="hero-eyebrow" data-i18n="hero_eyebrow">Baby cry monitor on your phone</p>
     <h1 class="hero-wordmark" aria-label="Naps0" translate="no">
       <span class="lN">N</span><span class="lA">a</span><span class="lP">p</span><span class="lS">s</span><span class="l0">0</span>
     </h1>
@@ -401,24 +401,24 @@
   <div class="wrap">
     <div class="sec-header">
       <p class="sec-eyebrow" data-i18n="help_eyebrow">How it helps</p>
-      <h2 class="sec-title" data-i18n="help_title">Less guessing. More calm.</h2>
+      <h2 class="sec-title" data-i18n="help_title">Breathe. Naps0 is listening.</h2>
     </div>
     <div class="feat-grid">
       <div class="feat-card">
-        <div class="feat-title" data-i18n="help_b1_t">Less guessing, more calm</div>
-        <p class="feat-text" data-i18n="help_b1_x">When your baby cries and you don't know what's wrong, Naps0 gives you a hint of what they might need. So you respond with more confidence and less worry.</p>
-      </div>
-      <div class="feat-card">
         <div class="feat-title" data-i18n="help_b2_t">It flags what matters most, first</div>
         <p class="feat-text" data-i18n="help_b2_x">If the cry suggests intense distress, Naps0 gives you a priority heads-up so you can react sooner. The rest of the needs — hunger, sleep, discomfort — it shows as guidance.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-title" data-i18n="help_b1_t">Calmer when you don't know what's wrong</div>
+        <p class="feat-text" data-i18n="help_b1_x">When your baby cries and you don't know what's wrong, Naps0 gives you a hint of what they might need. So you respond with more confidence and less worry.</p>
       </div>
       <div class="feat-card">
         <div class="feat-title" data-i18n="help_b3_t">It works while you rest</div>
         <p class="feat-text" data-i18n="help_b3_x">Naps0 listens in the background and alerts you instantly when it picks something up. You don't have to watch the screen: you rest, the app stays attentive.</p>
       </div>
       <div class="feat-card">
-        <div class="feat-title" data-i18n="help_b4_t">Made for exhausted parents</div>
-        <p class="feat-text" data-i18n="help_b4_x">No complicated setup, no jargon. You open it, it listens, it alerts you. Made for those nights when you have barely any energy left.</p>
+        <div class="feat-title" data-i18n="help_b4_t">Made for first-time parents</div>
+        <p class="feat-text" data-i18n="help_b4_x">No complicated setup, no jargon. You open it, it listens, it alerts you. For those nights that get tough.</p>
       </div>
     </div>
   </div>
@@ -528,7 +528,7 @@
 const translations = {
   en: {
     nav_contact:    'Contact',
-    hero_eyebrow:   'On-device baby cry companion',
+    hero_eyebrow:   'Baby cry monitor on your phone',
     hero_headline:  'Understand your baby better, even at 3 in the morning.',
     hero_body:      "Naps0 listens to your baby's cry and helps you understand what they might need: hunger, sleep, discomfort or pain. All in real time, and <strong>without the audio ever leaving your phone</strong>.",
     hero_disclaimer:'Naps0 is a help, not a medical diagnosis. For any health concern, check with your pediatrician.',
@@ -542,15 +542,15 @@ const translations = {
     cls_pain_sub:   'Priority heads-up',
     cls_guidance:   'Guidance',
     help_eyebrow:   'How it helps',
-    help_title:     'Less guessing. More calm.',
-    help_b1_t:      'Less guessing, more calm',
+    help_title:     'Breathe. Naps0 is listening.',
+    help_b1_t:      'Calmer when you don't know what's wrong',
     help_b1_x:      "When your baby cries and you don't know what's wrong, Naps0 gives you a hint of what they might need. So you respond with more confidence and less worry.",
     help_b2_t:      'It flags what matters most, first',
     help_b2_x:      'If the cry suggests intense distress, Naps0 gives you a priority heads-up so you can react sooner. The rest of the needs — hunger, sleep, discomfort — it shows as guidance.',
     help_b3_t:      'It works while you rest',
     help_b3_x:      "Naps0 listens in the background and alerts you instantly when it picks something up. You don't have to watch the screen: you rest, the app stays attentive.",
-    help_b4_t:      'Made for exhausted parents',
-    help_b4_x:      'No complicated setup, no jargon. You open it, it listens, it alerts you. Made for those nights when you have barely any energy left.',
+    help_b4_t:      'Made for first-time parents',
+    help_b4_x:      'No complicated setup, no jargon. You open it, it listens, it alerts you. For those nights that get tough.',
     priv_eyebrow:   'Privacy',
     priv_title:     "The most intimate sound in your home shouldn't travel to any server.",
     priv_body:      "With Naps0, everything happens inside your phone. Your baby's cry is processed right there, on your device, and <strong>the audio never leaves the phone</strong>.",
@@ -592,7 +592,7 @@ const translations = {
   },
   es: {
     nav_contact:    'Contacto',
-    hero_eyebrow:   'Acompañante del llanto · en tu móvil',
+    hero_eyebrow:   'Monitor de llanto de bebé en tu móvil',
     hero_headline:  'Entiende mejor a tu bebé, incluso a las 3 de la mañana.',
     hero_body:      'Naps0 escucha el llanto de tu bebé y te ayuda a entender qué puede necesitar: hambre, sueño, molestia o dolor. Todo en tiempo real, y <strong>sin que el audio salga nunca de tu móvil</strong>.',
     hero_disclaimer:'Naps0 es una ayuda, no un diagnóstico médico. Ante cualquier duda de salud, consulta a tu pediatra.',
@@ -606,15 +606,15 @@ const translations = {
     cls_pain_sub:   'Aviso prioritario',
     cls_guidance:   'Orientación',
     help_eyebrow:   'Cómo te ayuda',
-    help_title:     'Menos adivinar. Más calma.',
-    help_b1_t:      'Menos adivinar, más calma',
+    help_title:     'Respira. Naps0 está atento.',
+    help_b1_t:      'Más calma cuando no sabes qué le pasa',
     help_b1_x:      'Cuando tu bebé llora y no sabes qué le pasa, Naps0 te da una pista de lo que puede necesitar. Así respondes con más confianza y menos angustia.',
     help_b2_t:      'Te avisa primero de lo que más importa',
     help_b2_x:      'Si el llanto sugiere un malestar intenso, Naps0 te lo señala como aviso prioritario para que reacciones cuanto antes. El resto de necesidades — hambre, sueño, molestia — te las muestra como orientación.',
     help_b3_t:      'Funciona mientras descansas',
     help_b3_x:      'Naps0 escucha de fondo y te avisa al instante cuando detecta algo. No tienes que estar pendiente de la pantalla: tú descansas, la app está atenta.',
-    help_b4_t:      'Pensada para padres agotados',
-    help_b4_x:      'Sin configuraciones complicadas ni jerga. Abres, escucha, te avisa. Pensada para esas noches en las que apenas te quedan fuerzas.',
+    help_b4_t:      'Pensada para madres y padres primerizos',
+    help_b4_x:      'Sin configuraciones complicadas ni jerga. Abres, escucha, te avisa. Para esas noches que se hacen cuesta arriba.',
     priv_eyebrow:   'Privacidad',
     priv_title:     'Lo más íntimo de tu casa no debería viajar a ningún servidor.',
     priv_body:      'En Naps0, todo ocurre dentro de tu móvil. El llanto de tu bebé se procesa ahí mismo, en tu dispositivo, y <strong>el audio nunca sale del teléfono</strong>.',
