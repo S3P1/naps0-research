@@ -53,13 +53,13 @@
       --red:        #E74C3C;
       --pain:       #C0392B;
       --hunger:     #D4A000;
-      --discomfort: #D4622A;
+      --discomfort: #BA4A00;
       --tired:      #7B3FA0;
       --white:      #ffffff;
 
       /* Wordmark letter colors (icon spec: N gold, a orange, p red, s purple, 0 white) */
       --cN: #D4A000;
-      --ca: #D4622A;
+      --ca: #BA4A00;
       --cp: #C0392B;
       --cs: #7B3FA0;
       --c0: #ffffff;
@@ -116,14 +116,14 @@
       height: 52px; display: flex; align-items: center; justify-content: space-between;
     }
     .logo {
-      font-family: var(--fi); font-weight: 900; font-size: 20px;
-      letter-spacing: 0; text-decoration: none;
+      font-family: var(--fi); font-weight: 900; font-size: 23px;
+      letter-spacing: 0; font-kerning: none; text-decoration: none;
       display: inline-flex; align-items: baseline; line-height: 1;
     }
-    .logo .lN { color: var(--cN); margin-right: -0.0325em; }
-    .logo .lA { color: var(--ca); margin-right: -0.052em; }
-    .logo .lP { color: var(--cp); margin-right: -0.045em; }
-    .logo .lS { color: var(--cs); margin-right: -0.0375em; }
+    .logo .lN { color: var(--cN); margin-right: -0.0606em; }
+    .logo .lA { color: var(--ca); margin-right: -0.0897em; }
+    .logo .lP { color: var(--cp); margin-right: -0.0560em; }
+    .logo .lS { color: var(--cs); margin-right: -0.0600em; }
     .logo .l0 { color: var(--c0); }
 
     .nav-links { display: flex; gap: 1.5rem; list-style: none; align-items: center; }
@@ -155,19 +155,19 @@
     .hero-wordmark {
       font-family: var(--fi); font-weight: 900;
       font-size: clamp(64px, 13vw, 128px); line-height: 0.88;
-      letter-spacing: 0; margin-bottom: 1.75rem;
+      letter-spacing: 0; font-kerning: none; margin-bottom: 1.75rem;
       display: inline-flex; align-items: baseline;
       opacity: 0; animation: up 0.7s ease forwards 0.2s;
     }
-    .hero-wordmark .lN { color: var(--cN); margin-right: -0.0325em; }
-    .hero-wordmark .lA { color: var(--ca); margin-right: -0.052em; }
-    .hero-wordmark .lP { color: var(--cp); margin-right: -0.045em; }
-    .hero-wordmark .lS { color: var(--cs); margin-right: -0.0375em; }
+    .hero-wordmark .lN { color: var(--cN); margin-right: -0.0606em; }
+    .hero-wordmark .lA { color: var(--ca); margin-right: -0.0897em; }
+    .hero-wordmark .lP { color: var(--cp); margin-right: -0.0560em; }
+    .hero-wordmark .lS { color: var(--cs); margin-right: -0.0600em; }
     .hero-wordmark .l0 { color: var(--c0); }
 
     .hero-headline {
       font-family: var(--fi); font-weight: 800;
-      font-size: clamp(22px, 4vw, 34px); line-height: 1.2;
+      font-size: clamp(20px, 3.2vw, 28px); line-height: 1.2;
       letter-spacing: -0.01em; color: var(--text);
       max-width: 640px; margin: 0 auto 1.5rem;
       opacity: 0; animation: up 0.7s ease forwards 0.3s;
