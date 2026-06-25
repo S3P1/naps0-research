@@ -23,6 +23,25 @@
   <meta name="description" content="Naps0 helps you understand what your baby might need — hunger, sleep, discomfort or pain — in real time, 100% on your phone. No cloud, no accounts, no subscription.">
   <meta name="theme-color" content="#020503">
 
+  <!-- Favicon / app icons (canon del wordmark; generados con tools/icons/gen_web_assets.py) -->
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+
+  <!-- Open Graph / Twitter (tarjeta al compartir; og:image en URL absoluta segun requieren los scrapers) -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://naps0.com/">
+  <meta property="og:title" content="Naps0 — Understand your baby's cry">
+  <meta property="og:description" content="Naps0 helps you understand what your baby might need — hunger, sleep, discomfort or pain — in real time, 100% on your phone. No cloud, no accounts, no subscription.">
+  <meta property="og:image" content="https://naps0.com/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Naps0 — Understand your baby's cry">
+  <meta name="twitter:description" content="Naps0 helps you understand what your baby might need — hunger, sleep, discomfort or pain — in real time, 100% on your phone. No cloud, no accounts, no subscription.">
+  <meta name="twitter:image" content="https://naps0.com/og-image.png">
+
   <!-- Fuentes AUTOALOJADAS (sin Google Fonts CDN). Definicion @font-face mas abajo en <style>.
        Coloca los .woff2 en ./fonts/ segun FONTS_SELFHOST.md antes de desplegar. -->
 
@@ -34,7 +53,7 @@
     @font-face { font-family:'Inter'; font-style:normal; font-weight:100 900; font-display:swap; src:url('./fonts/inter-var.woff2') format('woff2'); }
     @font-face { font-family:'DM Mono'; font-style:normal; font-weight:300; font-display:swap; src:url('./fonts/dm-mono-300.woff2') format('woff2'); }
     @font-face { font-family:'DM Mono'; font-style:normal; font-weight:400; font-display:swap; src:url('./fonts/dm-mono-400.woff2') format('woff2'); }
-    @font-face { font-family:'DM Mono'; font-style:italic; font-weight:300; font-display:swap; src:url('./fonts/dm-mono-300-italic.woff2') format('woff2'); }
+    /* DM Mono italic: sintetizado por el navegador (no se autoaloja .woff2 italic; el unico italic es el disclaimer de 11px). */
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -117,7 +136,7 @@
     }
     .logo {
       font-family: var(--fi); font-weight: 900; font-size: 23px;
-      letter-spacing: 0; font-kerning: none; text-decoration: none;
+      letter-spacing: 0; font-kerning: none; font-optical-sizing: none; text-decoration: none;
       display: inline-flex; align-items: baseline; line-height: 1;
     }
     .logo .lN { color: var(--cN); margin-right: -0.0606em; }
@@ -155,7 +174,7 @@
     .hero-wordmark {
       font-family: var(--fi); font-weight: 900;
       font-size: clamp(64px, 13vw, 128px); line-height: 0.88;
-      letter-spacing: 0; font-kerning: none; margin-bottom: 1.75rem;
+      letter-spacing: 0; font-kerning: none; font-optical-sizing: none; margin-bottom: 1.75rem;
       display: inline-flex; align-items: baseline;
       opacity: 0; animation: up 0.7s ease forwards 0.2s;
     }
@@ -414,7 +433,7 @@
       </div>
       <div class="feat-card">
         <div class="feat-title" data-i18n="help_b3_t">It works while you rest</div>
-        <p class="feat-text" data-i18n="help_b3_x">Naps0 listens in the background and alerts you instantly when it picks something up. You don't have to watch the screen: you rest, the app stays attentive.</p>
+        <p class="feat-text" data-i18n="help_b3_x">Naps0 listens in the background and alerts you as soon as it recognizes a cry. You don't have to watch the screen: you rest, the app stays attentive.</p>
       </div>
       <div class="feat-card">
         <div class="feat-title" data-i18n="help_b4_t">Made for first-time parents</div>
@@ -518,6 +537,8 @@
     <p class="foot-disclaimer" data-i18n="foot_disclaimer">Naps0 is a consumer aid for parents, not a medical device or a diagnostic tool. For any concern about your baby's health, check with your pediatrician.</p>
     <div class="foot-meta">
       <a href="mailto:contact@naps0.com">contact@naps0.com</a><br>
+      <!-- TODO deploy: sustituir [URL_PRIVACIDAD] por la URL real de la politica de privacidad antes de publicar -->
+      <a href="[URL_PRIVACIDAD]" data-i18n="foot_privacy">Privacy Policy</a><br>
       <span data-i18n="footer_copy">© 2026 Naps0 · App proprietary</span>
     </div>
   </div>
@@ -548,7 +569,7 @@ const translations = {
     help_b2_t:      'It flags what matters most, first',
     help_b2_x:      'If the cry suggests intense distress, Naps0 gives you a priority heads-up so you can react sooner. The rest of the needs — hunger, sleep, discomfort — it shows as guidance.',
     help_b3_t:      'It works while you rest',
-    help_b3_x:      "Naps0 listens in the background and alerts you instantly when it picks something up. You don't have to watch the screen: you rest, the app stays attentive.",
+    help_b3_x:      "Naps0 listens in the background and alerts you as soon as it recognizes a cry. You don't have to watch the screen: you rest, the app stays attentive.",
     help_b4_t:      'Made for first-time parents',
     help_b4_x:      'No complicated setup, no jargon. You open it, it listens, it alerts you. For those nights that get tough.',
     priv_eyebrow:   'Privacy',
@@ -589,6 +610,7 @@ const translations = {
     close_body:     'Naps0 is coming to Android. Join the waitlist and be the first to know when it launches — 10 days free, then a single payment. No cloud, no accounts, no subscription.',
     foot_disclaimer:'Naps0 is a consumer aid for parents, not a medical device or a diagnostic tool. For any concern about your baby\'s health, check with your pediatrician.',
     footer_copy:    '© 2026 Naps0 · App proprietary',
+    foot_privacy:   'Privacy Policy',
   },
   es: {
     nav_contact:    'Contacto',
@@ -612,7 +634,7 @@ const translations = {
     help_b2_t:      'Te avisa primero de lo que más importa',
     help_b2_x:      'Si el llanto sugiere un malestar intenso, Naps0 te lo señala como aviso prioritario para que reacciones cuanto antes. El resto de necesidades — hambre, sueño, molestia — te las muestra como orientación.',
     help_b3_t:      'Funciona mientras descansas',
-    help_b3_x:      'Naps0 escucha de fondo y te avisa al instante cuando detecta algo. No tienes que estar pendiente de la pantalla: tú descansas, la app está atenta.',
+    help_b3_x:      'Naps0 escucha de fondo y te avisa en cuanto reconoce un llanto. No tienes que estar pendiente de la pantalla: tú descansas, la app está atenta.',
     help_b4_t:      'Pensada para madres y padres primerizos',
     help_b4_x:      'Sin configuraciones complicadas ni jerga. Abres, escucha, te avisa. Para esas noches que se hacen cuesta arriba.',
     priv_eyebrow:   'Privacidad',
@@ -653,6 +675,7 @@ const translations = {
     close_body:     'Naps0 llega pronto a Android. Apúntate a la lista y sé de los primeros en saberlo cuando se lance — 10 días gratis, luego un único pago. Sin nube, sin cuentas, sin suscripción.',
     foot_disclaimer:'Naps0 es una ayuda de consumo para padres, no un dispositivo médico ni una herramienta de diagnóstico. Ante cualquier duda sobre la salud de tu bebé, consulta con tu pediatra.',
     footer_copy:    '© 2026 Naps0 · App de uso exclusivo',
+    foot_privacy:   'Política de privacidad',
   }
 };
 
