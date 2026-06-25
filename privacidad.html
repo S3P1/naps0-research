@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Política de privacidad · Naps0</title>
+  <meta name="description" content="Política de privacidad de Naps0: todo ocurre en tu teléfono. No recopilamos datos, no hay cuentas, no hay rastreo.">
+  <meta name="theme-color" content="#020503">
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+
+  <!-- Fuentes AUTOALOJADAS (sin Google Fonts CDN); mismas que la landing. -->
+  <style>
+    /* Inter se sirve como fuente VARIABLE: un solo woff2 cubre 300-900. */
+    @font-face { font-family:'Inter'; font-style:normal; font-weight:100 900; font-display:swap; src:url('./fonts/inter-var.woff2') format('woff2'); }
+    @font-face { font-family:'DM Mono'; font-style:normal; font-weight:300; font-display:swap; src:url('./fonts/dm-mono-300.woff2') format('woff2'); }
+    @font-face { font-family:'DM Mono'; font-style:normal; font-weight:400; font-display:swap; src:url('./fonts/dm-mono-400.woff2') format('woff2'); }
+    /* DM Mono italic: sintetizado por el navegador (no se autoaloja .woff2 italic). */
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:#020503; --bg-mid:#080F0A; --bg-green:#0D2016;
+      --border:rgba(255,255,255,0.08); --border2:rgba(255,255,255,0.16);
+      --text:#e8e8e8; --text2:rgba(255,255,255,0.62); --text3:rgba(255,255,255,0.30);
+      --cN:#D4A000; --ca:#BA4A00; --cp:#C0392B; --cs:#7B3FA0; --c0:#ffffff;
+      --fi:'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      --fm:'DM Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+      --max:760px;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg); color: var(--text);
+      font-family: var(--fm); font-size: 14px; font-weight: 300; line-height: 1.75;
+      -webkit-font-smoothing: antialiased; overflow-x: hidden;
+    }
+    body::before {
+      content:''; position: fixed; inset: 0; z-index: 0;
+      background: radial-gradient(ellipse 90% 60% at 50% 0%, var(--bg-green) 0%, var(--bg-mid) 40%, var(--bg) 75%);
+    }
+    .wrap { width: 100%; max-width: var(--max); margin: 0 auto; padding: 0 clamp(1.25rem, 5vw, 2rem); position: relative; z-index: 1; }
+
+    header { border-bottom: 1px solid var(--border); padding: 1.4rem 0; }
+    header .wrap { display: flex; align-items: center; justify-content: space-between; }
+    .logo {
+      font-family: var(--fi); font-weight: 900; font-size: 22px;
+      letter-spacing: 0; font-kerning: none; font-optical-sizing: none; text-decoration: none;
+      display: inline-flex; align-items: baseline; line-height: 1;
+    }
+    .logo .lN { color: var(--cN); margin-right: -0.0606em; }
+    .logo .lA { color: var(--ca); margin-right: -0.0897em; }
+    .logo .lP { color: var(--cp); margin-right: -0.0560em; }
+    .logo .lS { color: var(--cs); margin-right: -0.0600em; }
+    .logo .l0 { color: var(--c0); }
+    .lang-btn {
+      background: none; border: 1px solid var(--border); color: var(--text3);
+      font-family: var(--fm); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+      padding: 0.3rem 0.6rem; border-radius: 3px; cursor: pointer; transition: all 0.2s;
+    }
+    .lang-btn:hover { border-color: var(--border2); color: var(--text); }
+
+    main { padding: 3rem 0 1rem; }
+    h1 { font-family: var(--fi); font-weight: 800; font-size: clamp(28px, 5vw, 40px); line-height: 1.15; letter-spacing: -0.01em; }
+    .meta { color: var(--text3); font-size: 12px; margin-top: 0.6rem; margin-bottom: 2.4rem; }
+    h2 { font-family: var(--fi); font-weight: 700; font-size: 17px; color: var(--text); margin: 2.3rem 0 0.5rem; }
+    p, li { color: var(--text2); margin-bottom: 0.75rem; }
+    ul { padding-left: 1.2rem; margin-bottom: 0.75rem; }
+    li { margin-bottom: 0.3rem; }
+    strong { color: var(--text); font-weight: 400; }
+    a.inline { color: var(--ca); text-decoration: none; border-bottom: 1px solid rgba(186,74,0,0.45); }
+    a.inline:hover { border-bottom-color: var(--ca); }
+    hr { border: none; border-top: 1px solid var(--border); margin: 1.8rem 0; }
+
+    footer { border-top: 1px solid var(--border); padding: 2rem 0; margin-top: 2.5rem; }
+    footer .wrap { display: flex; flex-wrap: wrap; gap: 0.4rem 1.2rem; align-items: center; color: var(--text3); font-size: 12px; }
+    footer a { color: var(--text2); text-decoration: none; }
+    footer a:hover { color: var(--text); }
+
+    [hidden] { display: none !important; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <a class="logo" href="index.html" aria-label="Naps0 - inicio"><span class="lN">N</span><span class="lA">a</span><span class="lP">p</span><span class="lS">s</span><span class="l0">0</span></a>
+      <button id="langBtn" class="lang-btn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main>
+    <div class="wrap">
+
+      <!-- ============ ES ============ -->
+      <article class="doc" data-lang="es">
+        <h1>Política de privacidad</h1>
+        <p class="meta">En vigor: 25 de junio de 2026 · Última actualización: 25 de junio de 2026</p>
+
+        <h2>1. Quiénes somos (responsable del tratamiento)</h2>
+        <p>Naps0 es una aplicación para móvil que ayuda a madres y padres a entender mejor el llanto de su bebé. El responsable del tratamiento de los datos descritos en esta política es <strong>Alberto Fernández Herrero</strong>, que desarrolla y publica la aplicación Naps0 como persona física.</p>
+        <ul>
+          <li><strong>Contacto de privacidad:</strong> <a class="inline" href="mailto:contact@naps0.com">contact@naps0.com</a></li>
+          <li><strong>Ámbito:</strong> esta política se aplica a la aplicación Naps0 y al sitio web naps0.com.</li>
+          <li><strong>Responsable:</strong> Alberto Fernández Herrero (persona física).</li>
+        </ul>
+
+        <h2>2. Nuestro principio: todo ocurre en tu teléfono</h2>
+        <p>Naps0 está diseñada en torno a una idea sencilla: <strong>tu intimidad es tuya.</strong></p>
+        <ul>
+          <li>El sonido del llanto de tu bebé se procesa <strong>directamente en tu dispositivo</strong>.</li>
+          <li><strong>El audio nunca sale de tu teléfono.</strong> No se sube a ningún servidor ni a la nube.</li>
+          <li><strong>No hay cuentas de usuario.</strong> No necesitas registrarte ni dar un correo para usar la app.</li>
+          <li><strong>No hay rastreo ni perfiles publicitarios.</strong> No vendemos tus datos ni los de tu bebé.</li>
+        </ul>
+        <p>Naps0 te ayuda a entender qué puede necesitar tu bebé en tiempo real, sin que esa información viaje a ningún sitio.</p>
+
+        <h2>3. Datos que Naps0 maneja dentro del teléfono</h2>
+        <p>Para funcionar, la app trabaja con cierta información que <strong>permanece almacenada localmente en tu dispositivo</strong>, bajo tu control:</p>
+        <ul>
+          <li><strong>Sonido captado por el micrófono:</strong> se analiza en el momento, en el propio teléfono, para ofrecerte una orientación sobre el llanto. Este análisis es local.</li>
+          <li><strong>Historial de avisos en el dispositivo:</strong> la app puede guardar en el teléfono un registro de los avisos (por ejemplo, la fecha/hora y la categoría estimada) para mostrarte patrones. Este historial vive en tu teléfono.</li>
+          <li><strong>Datos del perfil del bebé que tú introduces</strong> (por ejemplo, un nombre o la edad), si decides añadirlos. Se guardan localmente para personalizar tu experiencia.</li>
+        </ul>
+        <p>Toda esta información se queda en tu dispositivo. Puedes eliminarla en cualquier momento borrando los datos de la app o desinstalándola (ver Sección 7).</p>
+
+        <h2>4. ¿Recopila Naps0 datos?</h2>
+        <p><strong>Naps0 no recopila datos personales.</strong> No enviamos información a ningún servidor: ni el audio, ni el historial, ni el perfil del bebé. Todo permanece en tu dispositivo. Por tanto:</p>
+        <ul>
+          <li><strong>¿Recopilamos datos?</strong> No.</li>
+          <li><strong>¿Compartimos datos?</strong> No.</li>
+          <li><strong>¿Se procesan los datos solo en el dispositivo?</strong> Sí.</li>
+        </ul>
+
+        <h2>5. Pagos</h2>
+        <p>Naps0 se prueba gratis y, para seguir usándola, se desbloquea con <strong>un único pago</strong>, sin suscripción y sin cargos automáticos.</p>
+        <ul>
+          <li><strong>El pago se procesa a través de Google Play</strong>, no por Naps0.</li>
+          <li><strong>Naps0 no recibe, no ve y no almacena los datos de tu tarjeta</strong> ni tu información de pago.</li>
+          <li>El tratamiento de los datos de pago se rige por la política de privacidad de Google.</li>
+        </ul>
+
+        <h2>6. Menores y uso por parte de madres y padres</h2>
+        <p>Naps0 es una herramienta <strong>para madres, padres y cuidadores adultos.</strong> Es la persona adulta quien la instala y la usa.</p>
+        <ul>
+          <li>La app analiza el sonido del llanto <strong>de forma acústica y en el dispositivo</strong> para ofrecer una orientación. <strong>No crea un perfil del menor</strong> ni lo identifica.</li>
+          <li>No solicitamos datos personales del menor. Si decides añadir un nombre o una edad para personalizar tu experiencia, esa información se guarda <strong>localmente en tu teléfono</strong> y bajo tu control (ver Sección 3).</li>
+          <li>Naps0 no está dirigida a que la usen menores de edad.</li>
+        </ul>
+
+        <h2>7. Tus derechos y el control sobre tus datos</h2>
+        <p>Como los datos de Naps0 se quedan en tu dispositivo, <strong>tú tienes el control directo:</strong></p>
+        <ul>
+          <li>Puedes <strong>ver y borrar</strong> el historial y el perfil dentro de la app.</li>
+          <li>Puedes <strong>eliminar todos los datos</strong> borrando los datos de la aplicación desde los ajustes de tu teléfono, o <strong>desinstalando</strong> la app.</li>
+        </ul>
+        <p>Además, conforme al Reglamento General de Protección de Datos (RGPD) y a la normativa aplicable, tienes derecho a: <strong>acceso, rectificación, supresión, limitación del tratamiento, oposición y portabilidad</strong> de tus datos personales, así como a presentar una reclamación ante la autoridad de control competente (en España, la Agencia Española de Protección de Datos).</p>
+        <p>Para ejercer estos derechos o resolver cualquier duda, escríbenos a <a class="inline" href="mailto:contact@naps0.com">contact@naps0.com</a>.</p>
+
+        <h2>8. Conservación de datos y transferencias</h2>
+        <ul>
+          <li><strong>Conservación:</strong> los datos que la app guarda permanecen en tu dispositivo hasta que tú los borras o desinstalas la app. Naps0 no los conserva en ningún servidor.</li>
+          <li><strong>Transferencias internacionales:</strong> al procesarse todo en tu dispositivo, <strong>no hay transferencia de tus datos a terceros ni fuera de tu país.</strong></li>
+        </ul>
+
+        <h2>9. Sitio web naps0.com (cookies y analítica)</h2>
+        <p>El sitio web naps0.com es una página informativa. <strong>No utiliza cookies de seguimiento ni herramientas de analítica que recopilen datos personales.</strong></p>
+
+        <h2>10. Naps0 es una ayuda, no un diagnóstico médico</h2>
+        <p>Naps0 te ofrece una orientación para entender mejor el llanto de tu bebé. <strong>No es un dispositivo médico, no diagnostica y no sustituye el criterio de un profesional sanitario.</strong> Ante cualquier duda sobre la salud de tu bebé, consulta a tu pediatra.</p>
+
+        <h2>11. Cambios en esta política</h2>
+        <p>Podemos actualizar esta política para reflejar mejoras de la app o cambios legales. Si hacemos cambios relevantes, los publicaremos en esta página y actualizaremos la fecha de "última actualización". Te recomendamos revisarla de vez en cuando.</p>
+
+        <h2>12. Contacto</h2>
+        <p>Para cualquier consulta sobre privacidad o sobre esta política: <a class="inline" href="mailto:contact@naps0.com">contact@naps0.com</a></p>
+      </article>
+
+      <!-- ============ EN ============ -->
+      <article class="doc" data-lang="en" hidden>
+        <h1>Privacy Policy</h1>
+        <p class="meta">Effective: June 25, 2026 · Last updated: June 25, 2026</p>
+
+        <h2>1. Who we are (data controller)</h2>
+        <p>Naps0 is a mobile app that helps parents better understand their baby's cry. The controller of the data described in this policy is <strong>Alberto Fernández Herrero</strong>, who develops and publishes the Naps0 app as a natural person.</p>
+        <ul>
+          <li><strong>Privacy contact:</strong> <a class="inline" href="mailto:contact@naps0.com">contact@naps0.com</a></li>
+          <li><strong>Scope:</strong> this policy applies to the Naps0 app and to the website naps0.com.</li>
+          <li><strong>Controller:</strong> Alberto Fernández Herrero (natural person).</li>
+        </ul>
+
+        <h2>2. Our principle: everything happens on your phone</h2>
+        <p>Naps0 is built around one simple idea: <strong>your privacy is yours.</strong></p>
+        <ul>
+          <li>Your baby's cry sound is processed <strong>directly on your device.</strong></li>
+          <li><strong>The audio never leaves your phone.</strong> It is not uploaded to any server or to the cloud.</li>
+          <li><strong>There are no user accounts.</strong> You do not need to sign up or give an email to use the app.</li>
+          <li><strong>No tracking, no advertising profiles.</strong> We do not sell your data or your baby's data.</li>
+        </ul>
+        <p>Naps0 helps you understand what your baby may need in real time, without that information traveling anywhere.</p>
+
+        <h2>3. Data Naps0 handles inside your phone</h2>
+        <p>To work, the app uses certain information that <strong>stays stored locally on your device</strong>, under your control:</p>
+        <ul>
+          <li><strong>Sound captured by the microphone:</strong> analyzed in the moment, on the phone itself, to give you guidance about the cry. This analysis is local.</li>
+          <li><strong>On-device alert history:</strong> the app may keep a record on the phone of the alerts (for example, the date/time and the estimated category) to show you patterns. This history lives on your phone.</li>
+          <li><strong>Baby profile details you enter</strong> (for example, a name or an age), if you choose to add them. They are stored locally to personalize your experience.</li>
+        </ul>
+        <p>All of this information stays on your device. You can delete it at any time by clearing the app's data or uninstalling it (see Section 7).</p>
+
+        <h2>4. Does Naps0 collect data?</h2>
+        <p><strong>Naps0 does not collect personal data.</strong> We do not send information to any server: not the audio, not the history, not the baby profile. Everything stays on your device. Therefore:</p>
+        <ul>
+          <li><strong>Do we collect data?</strong> No.</li>
+          <li><strong>Do we share data?</strong> No.</li>
+          <li><strong>Is data processed only on the device?</strong> Yes.</li>
+        </ul>
+
+        <h2>5. Payments</h2>
+        <p>Naps0 is free to try, and to keep using it you unlock it with <strong>a single payment</strong>, with no subscription and no automatic charges.</p>
+        <ul>
+          <li><strong>The payment is processed through Google Play</strong>, not by Naps0.</li>
+          <li><strong>Naps0 does not receive, see or store your card details</strong> or your payment information.</li>
+          <li>The processing of payment data is governed by Google's privacy policy.</li>
+        </ul>
+
+        <h2>6. Children and use by parents</h2>
+        <p>Naps0 is a tool <strong>for adult parents and caregivers.</strong> It is the adult who installs and uses it.</p>
+        <ul>
+          <li>The app analyzes the cry sound <strong>acoustically and on the device</strong> to offer guidance. <strong>It does not create a profile of the child</strong> and does not identify the child.</li>
+          <li>We do not request personal data about the child. If you choose to add a name or an age to personalize your experience, that information is stored <strong>locally on your phone</strong> and under your control (see Section 3).</li>
+          <li>Naps0 is not intended to be used by minors.</li>
+        </ul>
+
+        <h2>7. Your rights and control over your data</h2>
+        <p>Because Naps0's data stays on your device, <strong>you have direct control:</strong></p>
+        <ul>
+          <li>You can <strong>view and delete</strong> the history and the profile within the app.</li>
+          <li>You can <strong>delete all data</strong> by clearing the app's data in your phone settings, or by <strong>uninstalling</strong> the app.</li>
+        </ul>
+        <p>In addition, under the General Data Protection Regulation (GDPR) and applicable law, you have the right to: <strong>access, rectification, erasure, restriction of processing, objection and portability</strong> of your personal data, as well as to lodge a complaint with the competent supervisory authority.</p>
+        <p>To exercise these rights or to resolve any question, write to us at <a class="inline" href="mailto:contact@naps0.com">contact@naps0.com</a>.</p>
+
+        <h2>8. Data retention and transfers</h2>
+        <ul>
+          <li><strong>Retention:</strong> the data the app stores remains on your device until you delete it or uninstall the app. Naps0 does not keep it on any server.</li>
+          <li><strong>International transfers:</strong> since everything is processed on your device, <strong>there is no transfer of your data to third parties or outside your country.</strong></li>
+        </ul>
+
+        <h2>9. The naps0.com website (cookies and analytics)</h2>
+        <p>The naps0.com website is an informational page. <strong>It does not use tracking cookies or analytics tools that collect personal data.</strong></p>
+
+        <h2>10. Naps0 is help, not a medical diagnosis</h2>
+        <p>Naps0 offers you guidance to better understand your baby's cry. <strong>It is not a medical device, it does not diagnose, and it does not replace the judgment of a healthcare professional.</strong> For any concern about your baby's health, consult your pediatrician.</p>
+
+        <h2>11. Changes to this policy</h2>
+        <p>We may update this policy to reflect app improvements or legal changes. If we make significant changes, we will post them on this page and update the "last updated" date. We recommend reviewing it from time to time.</p>
+
+        <h2>12. Contact</h2>
+        <p>For any privacy question or about this policy: <a class="inline" href="mailto:contact@naps0.com">contact@naps0.com</a></p>
+      </article>
+
+    </div>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <a href="index.html">naps0.com</a>
+      <a href="mailto:contact@naps0.com">contact@naps0.com</a>
+      <span>© 2026 Naps0</span>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      var btn = document.getElementById('langBtn');
+      var docs = document.querySelectorAll('.doc');
+      function apply(lang) {
+        docs.forEach(function (d) { d.hidden = (d.getAttribute('data-lang') !== lang); });
+        document.documentElement.lang = lang;
+        document.title = (lang === 'en') ? 'Privacy Policy · Naps0' : 'Política de privacidad · Naps0';
+        btn.textContent = (lang === 'en') ? 'ES' : 'EN';
+        try { localStorage.setItem('naps0_lang', lang); } catch (e) {}
+      }
+      var saved = null;
+      try { saved = localStorage.getItem('naps0_lang'); } catch (e) {}
+      var initial = saved || ((navigator.language || 'es').toLowerCase().indexOf('es') === 0 ? 'es' : 'en');
+      apply(initial);
+      btn.addEventListener('click', function () {
+        apply(document.documentElement.lang === 'en' ? 'es' : 'en');
+      });
+    })();
+  </script>
+</body>
+</html>
